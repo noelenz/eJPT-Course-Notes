@@ -86,9 +86,22 @@ Network layer protocols:
   - Protocol - This 8-bit value indicated the data payload type that the packet is carrying.b
 ![image](https://github.com/user-attachments/assets/21ddce2a-45dd-4ae4-9b55-751d1b35d79f)
 
+![image](https://github.com/user-attachments/assets/4d81584c-440b-411e-8f87-9fc85b64356c)
 
+![image](https://github.com/user-attachments/assets/758e0002-6ed8-4b7a-b103-e922c47e03f1)
 
+![image](https://github.com/user-attachments/assets/59276f45-e3ca-4a39-8bb2-a9324aeff536)
 
+### IPv4 Addresses
+- IPv4 address consists of four bytes, or octets; a byte consists of 8 bits.
+- a dot delimits every octet in the address.
+
+### Reserved IPv4 Addresses
+- 0.0.0.0 - 0.255.255.255 representing "this" network.
+- 127.0.0.0 - 127.255.255.255 representing the local host
+- 192.168.0.0 - 192.168.255.255 reserved for private networks.
+
+###
 
 
 
