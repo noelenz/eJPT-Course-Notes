@@ -84,6 +84,7 @@ Network layer protocols:
   - Time-to-Live (TTL) - An 8-bit value that indicates the remaining life of the packet.
   - Type-of-Service (ToS) - The Type-of-Service field contains an 8-bit binary value that is used to determine the priority of each packet.
   - Protocol - This 8-bit value indicated the data payload type that the packet is carrying.b
+
 ![image](https://github.com/user-attachments/assets/21ddce2a-45dd-4ae4-9b55-751d1b35d79f)
 
 ![image](https://github.com/user-attachments/assets/4d81584c-440b-411e-8f87-9fc85b64356c)
