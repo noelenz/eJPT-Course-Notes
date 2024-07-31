@@ -1,7 +1,7 @@
 # Footprinting & Scanning
 
   ##   Introduction
-
+  
   ###     Prerequisites
 
 | Protocol/Service      | Port Number(s) | TCP | UDP |
