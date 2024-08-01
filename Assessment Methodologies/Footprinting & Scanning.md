@@ -410,9 +410,55 @@ nmap -sn -PS22 -PA25 192.168.1.0/24
 
 By customizing the ports, you can effectively discover active hosts even in environments with restrictive network configurations.
 
+# Host Discovery With Nmap Part II
 
 scan multipe IP's
 `nmap -sn [target ip] [target ip]`
+
+- `vim targets.txt` wq
+*here you can insert IP's without typing manually*
+- `nmap -sn -iL targets.txt`
+
+TCP SIN PING:
+- By default, it will send a tcp syn packet to port 80 on the target system. If port closed, host responses with RSD packet. if port is open, host response with TCP syn-ack packet = connection established. after that, an RSD packet is sent to reset that connection.
+- In some cases, firewalls are configured to drop RSD packets, custom ports need to be specified. this is a way to perform port scanning with multiple IP
+- `nmap -sn -PS`: -sn = no port scan, -PS = override packets that the ping sends, specify TCP SYN ping. This command will send a SYN packet to the target on port 80. If host is online and port 80 is open, it will respond with a SYN-ACK. if closed, port will response with a RSD packet. If no response, its offline.
+- Using nmap -sn -PS [target ip] is more effective in environments where ICMP traffic is restricted but TCP traffic is allowed. It provides a way to discover hosts that may not respond to standard ICMP echo requests.
+
+-Start Wireshark capture and run scan
+- SYN to Port 80 on target
+- Target response with a SYN-ACK, Source Port 80
+- Attacker (We) sends RST
+- NMAP need a RST or SYN Ack response, to know if host is up. No response = host is offline
+- Its also possible, to give a port range to -PS or a (few) specific Port.
+
+
+### TCP ACK PING
+
+NMAP will send a TCP Packet with ACK flagset to Port 80 of the target system. If it is acitve, it will return a RST packet.
+- `nmap -sn -PA [target IP]`: 0 hosts up.
+change port, still not up  
+ACK Ping gets blocked by systems. not reliable.
+ACK Scan is good for utilize if theres a firewall
+
+### ICMP SPECIFIC PING SCAN
+
+- `nmap -sn -PE [target IP]`
+- `nmap -sn -PE [target IP] --send-ip // if on local ethernet`
+1. ping scan 2. TCP SYN ping Scan
+
+1. nmap -sn -v -T4 [target IP]
+2. nmap -sn -PS21,22,25,80,445,3389,8080 -T4 [target IP] | Alexis' method
+3. 2. nmap -sn -PS21,22,25,80,445,3389,8080 -PU137,138 -T4 [target IP] | Alexis' method
+
+
+
+
+
+
+
+
+
 
 
 
