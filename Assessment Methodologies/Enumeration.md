@@ -138,3 +138,103 @@ We need to identify vulnerabilities and web technologies. The more you know abou
 
 ### Adjusting Scan Speed
 - **Scan Speed Options**: Use `-T0` (paranoid) to `-T5` (insane) to adjust the speed of scans.
+
+
+# Penetration Testing Concept: Information Gathering Phase
+
+## Objective
+Identify vulnerabilities and web technologies to understand the target system comprehensively. Utilize both passive and active information gathering techniques for a successful penetration test.
+
+## Information Gathering Types
+
+### Passive Information Gathering
+Collect information without engaging directly with the target.
+- Identifying IP addresses & DNS information
+- Identifying domain names and domain ownership information
+- Identifying email addresses and social media profiles
+- Identifying web technologies used on target sites
+- Identifying subdomains
+
+### Active Information Gathering
+Engage directly with the target to gather detailed information.
+- Discovering open ports on target systems
+- Learning about the internal infrastructure of a target network/organization
+- Enumerating information from target systems
+
+## Steps for Passive Information Gathering
+
+### 1. Website Recon & Footprinting
+- **IP Addresses**: Visit the target website and copy the IP address.
+- **DNS Lookup**: Use the command `host <domain>` to resolve the domain name to IP addresses.
+- **Directory and Sitemap**: Check `/robots.txt` and `/sitemap.xml` for hidden directories.
+- **Web Technologies**: Use browser extensions like BuiltWith or Wappalyzer, or the command `whatweb <domain>`.
+- **Website Download**: Use `sudo apt-get install webhttrack` to download the website for offline analysis.
+
+### 2. WHOIS Enumeration
+- **Command**: `whois <domain>` to get domain ownership and nameserver information.
+
+### 3. Website Footprinting with Netcraft
+- **Tool**: Use Netcraft to get a comprehensive site report.
+
+### 4. DNS Recon
+- **DNSRecon**: `dnsrecon -d <domain>`
+- **Dnsdumpster**: Use the online tool for DNS server details and subdomains.
+
+### 5. WAF Detection with Wafw00f
+- **Commands**:
+  - `wafw00f -l` to list detectable WAFs.
+  - `wafw00f <domain>` to detect WAF for a specific domain.
+  - `wafw00f zonetransfer.me -a` to detect all possible firewalls.
+
+### 6. Subdomain Enumeration with Sublist3r
+- **Command**: `sublist3r -d <domain> -e google,yahoo`
+
+### 7. Google Dorks
+- **Examples**:
+  - `site:domain.com`
+  - `site:domain.com inurl:admin`
+  - `site:*.domain.com` (identifies subdomains)
+  - `site:*.domain.com intitle:admin`
+  - `site:*.domain.com filetype:pdf`
+  - `intitle:index of`
+  - `cache:ine.com` (use Wayback Machine for older versions of websites)
+  - `inurl:auth_user:file.txt`
+  - `inurl:passwd.txt`
+
+### 8. Email Harvesting with theHarvester
+- **Command**: `theHarvester -d <domain> -b google,linkedin`
+
+### 9. Leaked Password Databases
+- **Website**: Check `haveibeenpwned.com` for compromised accounts.
+
+### 10. DNS Zone Transfer
+- **DNS Records**: Understand and enumerate various DNS records (A, AAAA, NS, MX, CNAME, TXT, HINFO, SOA, SRV, PTR).
+- **DNS Interrogation**: `dnsrecon -d zonetransfer.me`
+- **DNS Zone Transfer**: Copy zone files from one DNS server to another.
+- **Additional Tools**: `dnsenum zonetransfer.me`, `dig -h`, `fierce -h`, `fierce -dns <domain>`
+
+## Steps for Active Information Gathering
+
+### 1. Host Discovery with Nmap
+- **Network Interface Query**: `ip a s` to show network interfaces and configurations.
+- **Ping Scan**: `sudo nmap -sn <network range>` to discover active hosts in a subnet.
+
+### 2. Port Scanning with Nmap
+- **TCP Ports**:
+  - Default Scan: `nmap [target IP]`
+  - Full Scan: `nmap -Pn -p- [target IP]`
+  - Specific Ports: `nmap -Pn -p 80,445,3389 [target IP]`
+  - Quick Scan: `nmap -Pn -F [target IP]`
+  - UDP Scan: `nmap -Pn -sU [target IP]`
+- **Service and OS Detection**:
+  - Service Version Detection: `nmap -Pn -sV [target IP]`
+  - OS Detection: `nmap -Pn -O [target IP]`
+  - Default Script Scan: `nmap -Pn -sC [target IP]`
+  - Aggressive Scan: `nmap -Pn -A [target IP]`
+- **Output Formats**:
+  - Normal Output: `nmap -Pn -oN output.txt [target IP]`
+  - XML Output: `nmap -Pn -oX output.xml [target IP]`
+- **Adjusting Scan Speed**: Use `-T0` (paranoid) to `-T5` (insane) to adjust the speed of scans.
+
+## Conclusion
+By following this structured approach, you can effectively gather critical information about the target system during the information gathering phase of a penetration test. This detailed knowledge is crucial for identifying vulnerabilities and planning further steps in the penetration testing process.
