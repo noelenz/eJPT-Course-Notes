@@ -1,23 +1,21 @@
-# eJPT Study Notes
-
-## Information Gathering
+# Information Gathering
 
 We need to identify vulnerabilities and web technologies. The more you know about your target, the more successful you will be.
 
-### Types of Information Gathering
+## Types of Information Gathering
 - **Passive Information Gathering**: Collecting information without actively engaging with the target.
 - **Active Information Gathering**: Actively engaging with the target system to collect as much information as possible (requires authorization).
 
-### Information We Are Looking For
+## Information We Are Looking For
 
-#### Passive Information Gathering
+### Passive Information Gathering
 - Identifying IP addresses & DNS information
 - Identifying domain names and domain ownership information
 - Identifying email addresses and social media profiles
 - Identifying web technologies used on target sites
 - Identifying subdomains
 
-#### Active Information Gathering
+### Active Information Gathering
 - Discovering open ports on target systems
 - Learning about the internal infrastructure of a target network/organization
 - Enumerating information from target systems
@@ -26,7 +24,7 @@ We need to identify vulnerabilities and web technologies. The more you know abou
 
 ### Website Recon & Footprinting
 
-#### What We Are Looking For
+### What We Are Looking For
 - IP addresses
 - Hidden directories from search engines
 - Names
@@ -35,7 +33,7 @@ We need to identify vulnerabilities and web technologies. The more you know abou
 - Physical addresses
 - Web technologies used
 
-#### Tools and Techniques
+### Tools and Techniques
 1. **Browser**: Visit the target website (e.g., `hackersploit.org`) and copy the IP address.
 2. **DNS Lookup**: Use `host hackersploit.org` to resolve the domain name to IP addresses.
 3. **Directory and Sitemap**: Check `/robots.txt` and `/sitemap.xml` for hidden directories.
