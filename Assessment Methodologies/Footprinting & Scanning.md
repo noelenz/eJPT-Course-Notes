@@ -326,7 +326,97 @@ same ICMP echo Ping sweep with nmap:
 
 # Host Discovery With Nmap
 
-- 
+**- Target IP Address: 10.2.18.206**
+**- Mission: identify every IP in eth1 subnet should be scanned if they are active
+
+*`nmap scanoptions target`*
+*`nmap -sn 192.168.1.1 --script`*
+*`nmap -help`*
+*`man nmap`*, /-sn for command search
+
+-  `ifconfig`,
+-  `nmap sn [subnet.0/24]`, `nmap sn [subnet.0-range]`: scans every host in this subnet
+what is being sent by nmap when we use -sn?
+-  `sudo wireshark -i eth1`
+- `nmap -sn *eth*/24`
+Wireshark: 
+- when you are connected to a physical connected network, sn / ping scan will utilize ARP protocol to perform Host discovery.
+
+- `nmap sn [subnet.0/24] --send-ip`: hosts that are active in this subnet
+Wireshark:
+- now icmp echo requests should also been sent
+- TCP should been sent from the kali system, SYN flag should be set
+**Problem: ICMP**.
+
+Ping Scan Combined with Custom Port Specifications:
+
+A ping scan in Nmap (-sn) can be combined with other host discovery options that allow for specifying custom ports. This means that instead of relying on the default ports, you can choose which ports Nmap uses to send its TCP-SYN or TCP-ACK packets.
+Default Behavior:
+
+    By default, when performing a ping scan, Nmap sends:
+        TCP-SYN packets to port 443.
+        TCP-ACK packets to port 80.
+
+These defaults can be overwritten with custom port specifications.
+How to Specify Custom Ports:
+
+You can change the ports used for the TCP-SYN and TCP-ACK packets with options like -PS (for SYN) and -PA (for ACK).
+Example Command:
+
+Suppose we want to check if hosts are active by sending TCP-SYN packets to port 22 (SSH) and TCP-ACK packets to port 25 (SMTP) in the subnet 192.168.1.0/24.
+
+bash
+
+nmap -sn -PS22 -PA25 192.168.1.0/24
+
+    Explanation:
+        -sn: Perform a ping scan (disable port scanning).
+        -PS22: Send TCP-SYN packets to port 22.
+        -PA25: Send TCP-ACK packets to port 25.
+        192.168.1.0/24: The target subnet.
+
+When to Use This:
+
+    ICMP Blocked:
+        When ICMP echo requests (default ping) are blocked by a firewall or security configuration, using TCP packets can bypass these restrictions.
+
+    Specific Services:
+        If you know that certain services (e.g., SSH, HTTP, SMTP) are more likely to be open, you can target those ports specifically.
+
+    Stealth and Precision:
+        By specifying ports commonly associated with legitimate services, you may reduce the chances of detection and increase the accuracy of host discovery.
+
+How It Works:
+
+    TCP-SYN Packets:
+        Nmap sends a SYN packet (part of the TCP handshake) to the specified port (e.g., port 22). If the host is active and the port is open, it responds with a SYN-ACK.
+
+    TCP-ACK Packets:
+        Nmap sends an ACK packet to the specified port (e.g., port 25). If the host is active, it responds with a RST (reset).
+
+    Result Interpretation:
+        Nmap interprets the responses (SYN-ACK or RST) to determine if the host is alive.
+
+Example Scenario:
+
+Let's say you're scanning a subnet where ICMP is blocked, and you know that some servers offer SSH and SMTP services. You can use the following command to check for active hosts:
+
+bash
+
+nmap -sn -PS22 -PA25 192.168.1.0/24
+
+    This command sends TCP-SYN packets to port 22 and TCP-ACK packets to port 25 for each IP address in the subnet 192.168.1.0/24.
+    If any host responds to these packets, Nmap marks them as active.
+
+By customizing the ports, you can effectively discover active hosts even in environments with restrictive network configurations.
+
+
+scan multipe IP's
+`nmap -sn [target ip] [target ip]`
+
+
+
+
 
 
 
@@ -334,11 +424,5 @@ same ICMP echo Ping sweep with nmap:
 
 
   
-
-
-
-
-
-
 
 
