@@ -254,7 +254,81 @@ Examples - Why Map a Network
     - Pros: TCP SYN ping is stealthier than ICMP and may bypass firewalls that allow outbond connections.
     - Cons: Some hosts may not respond to TCP SYN requests, and the results can be affected by firewalls and security devices.
    
-- ## Practical Host Discovery
+
+## Ping Sweeps
+- A ping sweep is a network scanning technique used to discover live hosts (computers, servers, etc) within a specific IP range on a network.
+- the basic idea is to send a series of ICMP Echo Request (ping) messages to a range of IP's and observe the responses to determine which addresses are acitve or reachable (response).
+- **Windows blocks ICMP requests**
+- Ping sweeps work by sending one or more specially crafted ICMP packets (Type 8 - echo request) to a host.
+- Destination replies with ICMP echo reply (Type 0) packet = host is alive.
+- In context of ICMP, ICMP echo Request and Echo Reply messages are used for purpose of ping. These messages have specific ICMP type and code values associated with them.
+
+- ICMP Echo Request:
+  - Type: 8
+  - Code: 0
+    **- if host online, =**
+- ICMP Echo Reply:
+  - Type: 0
+  - Code: 0
+
+- "Type" field in the ICMP header indicates the purpose/function of the ICMP message, and the "Code" field provides additional information or context related to the message type.
+- In case of ICMP Echo Request and Echo Reply, the Type value 8 represents Echo Request and the Type value 0 represents Echo Reply.*
+- So, when a device sends an ICMP Echo Request, it creates an ICMP packet with Type 8, Code 0.
+- When the destination devices recieve the Echo Request and responds with an Echo Reply, it creates an ICMP pacet with Type 0, Code 0.
+
+*ICMP Echo Request and Echo Reply:
+- Type value 8 = Echo Request
+- Type value 0 = Echo Reply
+
+- When Host is offline, ICMP echo Request sent by ping utility will not recieve a IMCP Echo Reply.
+- No response doesn't mean that the host is permanently offline; it also could be network congestion, temporary unavailability, or firewall setting that block ICMP traffic.
+- ping provides a simple way to check the reachability of a host.
+  ![grafik](https://github.com/user-attachments/assets/063e20e9-cf6f-4525-af7a-d25048dfaf21)
+
+### Pracitcal Ping Sweeps
+
+- Target IP address: 10.2.25.156
+- Tools: ping utility, fping
+
+1. `ping 10.2.25.156` = no response
+2. Terminal: `ping -c 5 10.2.25.156` = no response
+3. Windows: `ping -n 5 10.2.25.156`
+4. **Reason:** Host is offline or ICMP Echo Request could be blocked (network configuration, firewall, OS on host)
+5. `sudo wireshark`, `ifconfig`
+6. run wireshark with primary eth: `sudo wireshark -i eth1`
+7. `ping 10.2.25.156`
+8. No ICMP echo reply. Type 8 and Code 0, we should get a response. Host offline?
+9. `ping -c 5 10.2.25.156`
+
+**Scan every IP in subnet**
+
+1. `ping -c 1 10.10.18.0`
+2. `ping -b -c 1 10.10.18.0`
+*pinging other subnet eth0*
+3. `ping -b -c 10.1.0.0`
+4. IP is in fact online, ac Alexis Ahmed
+
+**FPING**
+`fping -a -g 10.10.18.0/24` gives all of the online/offline hosts // fping still uses ICMP
+  - `-fping -h` `man fping`
+  - `set source address` = stealth, spoof source IP, make it look like ICMP echo request comes from another IP address
+  - `fping -a -g 10.10.18.0/24 2>/dev/null` shows only online IP's in that subnet
+10.10.18.1
+10.10.18.3 (local machine)
+*if windows hosts are there, they are blocking*
+
+  - `fping -a 10.2.25.156 // target IP` no response. Because target system is Windows.
+  - `nmap -Pn 10.2.25.156 // -Pn skips host discovery` Host is up, available.
+
+same ICMP echo Ping sweep with nmap:
+  - `nmap -sn 10.2.25.156` down, because host discovery
+
+
+# Host Discovery With Nmap
+
+- 
+
+
 
 
 
