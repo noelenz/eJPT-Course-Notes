@@ -228,12 +228,34 @@ Examples - Why Map a Network
 - **Serice Version Detection:** Identifying specific versions of services running on open ports. This informtion is crucial for pinpointing vulnerabilities associated with particular service versions.
 - **Identifying Filtering and Security Measures:** Discovering firewalls, intrusion prevention systems, and other security measures in place. This helps pentesters understand the network's defenses and plan their approach accordingly.
 
-###Nmap (Network Mapper) & Nmap Functionality
+### Nmap (Network Mapper) & Nmap Functionality
 - **Usage:** Used for discovering hosts and services on a computer network, finding open ports, and identifying potential vulnerabilites.
 - **Host Discovery:** Nmap can identify live hosts on a network using techniques such as ICMP echo requests, ARP requests, or TCP/UDP probes.
 - **Port Scanning:** It can perform various types of port scans to discover open ports on target hosts.
 - **Service Version Detection:** Nmap can determine the versions of services running on open ports. This info helps in understanding the software stack and potential vulnerabilites associated with specific versions.
 - **Operating System Fingerprinting:**: Nmap can attempt to identify the operating system od target hosts based on characteristics observed during the scanning process.
+
+### NMAP Host Discovery Techniques
+- In pentesting, host discovery is a crucial phase to identify live hosts on a network before further exploration and vulnerability assessment.
+- Various techniques can be employed for host discovery, and the choice of technique depends on factors such as network characteristics, stealth requirements, and the goals of the penetration test.
+
+- **Ping Sweeps (ICMP Echo Requests):** Sending ICMP Echo Requests (ping) to a range of IP addresses to identify live hosts.
+- **ARP Scanning:** Using Address Resolution Protocol (ARP) requests to identify hosts within the same broadcast domain.
+- **TCP Syn Ping (Half-Open Scan):** Sending TCP SYN packets to a specific port (often port 80) to a check if a host is alive. If the host is alive, it respends with a TCP SYN-ACK. This technique is stealthier than ICMP ping. 
+- **UDP Ping:** Sending UDP packets to a specific port to check if a host is alive. This can be effective for hosts that do not respond to ICMP or TCP probes.
+- **TCP Ack Ping:** Sending TCP Ack packets to a specific port to check if a host is alive. This technique expects no response, but if a TCP RST (reset) is recieved, it indicates that the host is alive.
+- **SYN-ACK Ping (Sends SYN-ACK packets):** Sending TCP SYN-ACK packets to a specific port to check if a host is alive. If a TCP RST is recieved, it indicates that the host is alive
+
+- To enumerate the best host discovery technique for your needs, there are some considerations you need to keep in mind:
+  - **ICMP Ping:**
+    - Pros: ICMP ping is a widely supported and quick method for identifying live hosts.
+    - Cons: Some hosts or firewally may be configured to block ICMP traffic, limiting its effectiveness. ICMP ping can also be easily detected.
+  - "**TCP SYN Ping:**
+    - Pros: TCP SYN ping is stealthier than ICMP and may bypass firewalls that allow outbond connections.
+    - Cons: Some hosts may not respond to TCP SYN requests, and the results can be affected by firewalls and security devices.
+   
+- ## Practical Host Discovery
+
 
 
 
