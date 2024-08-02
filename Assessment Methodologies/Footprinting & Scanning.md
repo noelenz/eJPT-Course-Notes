@@ -450,6 +450,116 @@ ACK Scan is good for utilize if theres a firewall
 1. nmap -sn -v -T4 [target IP]
 2. nmap -sn -PS21,22,25,80,445,3389,8080 -T4 [target IP] | Alexis' method
 3. 2. nmap -sn -PS21,22,25,80,445,3389,8080 -PU137,138 -T4 [target IP] | Alexis' method
+  
+# Port Scanning
+
+
+`nmap [target IP]`: SYN port scan (1. Host Discovery, 2. SYN packet to 1000 most common ports
+`nmap -Pn [target IP]`: Skips host discovery
+`nmap -Pn -F [target IP]`: -P scans most common 100 ports
+`nmap -Pn -p 80 `: Specify specific (80)
+`nmap -Pn -p80,445,3389,8080`: multiple ports (filtered: Windows firewall. No firewall: closed)
+`nmap -F [target IP]` 
+`nmap -Pn -p-`: scan all tcp ports
+
+SYN (stealth) port scan:
+`sudo wireshark - eth1`: SYN packet to target port. If target port is open, response with a SYN-ACK packet. firewall blocks RSD response, SYN-ACK gets dropped
+Port 80 gives SYN ACK, so port 80 is open. nmap sends back RST to terminate 3-way-handshake before its established (saving time).
+
+conclusion: nmap will send a SYN packet to target port, if target port is open, response SYN-ACK packet. If closed: RST packet. IF nmap doesnt recieve a SYN-ACK or RST, theres a firewall or filtered. Port still can be open.
+
+if you are a non-proviliged user. `nmap -Pn -sS -F [target IP]`
+`nmap -Pn -sT [target IP] `: TCP connect scan, default port scanning if no root or sudo. Loud on a network, gets detected easily. Completes the 3-way-handshake.
+
+Scan for udp ports:
+`nmap -Pn -sU -p [target IP]`
+
+## Service Version & OS Detection
+
+1. Host Discovery: `ifconfig`, pentest on eth1. 24subnet. `ip a s`
+2. `nmap -sn [subnet.0/24]. First we want to see if any hosts are available in this subnet.
+3. target-1 is our primary target.
+4. nmap -sS [target ip]. all closed, so we need to scan the entire tcp port range:
+5. nmap -sS -p- [target IP]
+![grafik](https://github.com/user-attachments/assets/7995ead8-cd00-457d-b365-5a0cf556fa04)
+6. serivce version detection scan: nmap -T4 -sS -sV -p- [target IP]
+![grafik](https://github.com/user-attachments/assets/59d1d734-2ea5-49f3-92c8-90eeba8e5734)
+7. How tell what operating system is used: nmap -T4 -sS -sV -O -p- [target IP]
+8. identify OS aggressively and see kernel OS: nmap -T4 -sS -sV -O --osscan-guess -p- [target IP]. can also be done with service version detection: -sV --version-intensity (0-9).
+
+Host Discovery: Identify Network Interface
+
+    Check Network Interface: Identify the active network interface and IP address.
+
+    `ifconfig`
+    `ip a s`
+
+2. Ping Sweep: Identify Active Hosts
+
+    Ping Sweep the Subnet: Check which hosts are up in the target subnet.
+
+    `nmap -sn [subnet.0/24]`
+
+        Purpose: Quickly identify which hosts are online within the subnet.
+
+3. Primary Target Identification
+
+    Select Primary Target: Choose a host from the ping sweep results for further analysis.
+        Example: Assume target-1 with IP 192.80.212.3 is the primary target.
+
+4. Initial TCP SYN Scan
+
+    Perform TCP SYN Scan: Check for open ports on the primary target.
+
+    `nmap -sS [target IP]`
+
+        Example: `nmap -sS 192.80.212.3`
+        Purpose: Identify open ports quickly and stealthily.
+
+5. Full TCP Port Range Scan
+
+    Scan Entire TCP Port Range: If initial scan shows all ports closed, scan all 65535 ports.
+
+    `nmap -sS -p- [target IP]`
+
+        Example: `nmap -sS -p- 192.80.212.3`
+        Purpose: Ensure no open port is missed.
+
+6. Service Version Detection
+
+    Service Version Detection Scan: Identify versions of services running on open ports.
+
+    `nmap -T4 -sS -sV -p- [target IP]`
+
+        Example: `nmap -T4 -sS -sV -p- 192.80.212.3`
+        Purpose: Gather detailed information about the services to identify potential vulnerabilities.
+
+7. Operating System Detection
+
+    OS Detection: Identify the operating system of the target.
+
+    `nmap -T4 -sS -sV -O -p- [target IP]`
+
+        Example: `nmap -T4 -sS -sV -O -p- 192.80.212.3`
+        Purpose: Determine the operating system for further targeted attacks.
+
+8. Aggressive OS Detection and Kernel Identification
+
+    Aggressive OS Detection: Perform a more aggressive scan to guess the OS and see kernel information.
+
+`nmap -T4 -sS -sV -O --osscan-guess -p- [target IP]`
+
+    Example: `nmap -T4 -sS -sV -O --osscan-guess -p- 192.80.212.3`
+    Purpose: Obtain detailed OS and kernel information, useful for exploiting OS-specific vulnerabilities.
+    Alternative: Use version intensity for service detection.
+
+`nmap -sV --version-intensity 9 [target IP]`
+
+    Example: `nmap -sV --version-intensity 9 192.80.212.3`
+    Purpose: Increase the depth of service version detection.
+
+
+
 
 
 
