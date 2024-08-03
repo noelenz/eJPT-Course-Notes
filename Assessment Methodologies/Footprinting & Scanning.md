@@ -584,6 +584,40 @@ How to combine:
 
 # Evasion, Scan Performance & Output
 ## Firewall Detection & IDS Evasion 
+### Firewall Detection
+How to detect the presence of a firewall:
+1. `nmap -help`
+2. `nmap -sA` sends a packet with the ACK flagset
+3. `nmap -sn [target IP]`
+4. `nmap -Pn -sS -F [target IP]` since 92 ports are closed, it doesn't look like a firewall is active.
+5. `nmap -Pn -sA -p445,3389 [target IP]`: ports are unfilitered, so there is no firewall which will intervere.
+
+### IDS Evasion
+1. `nmap -Pn -sS -sV -F [target IP]`
+2. `sudo wireshark -i eth1`
+3. nmap sends a SYN, we get back a SYN-ACK or RST.
+4. `nmap -Pn -sS -sV -p80,445,3389 -f [target IP]`: packets will now be fragmented. Fragment offset is set to 0 on first fragment, on 2nd its 8.
+5. `nmap -Pn -sS -sV -p80,445,3389 -f --mtu [target IP]`
+
+Spoofing:
+On every network wihtin the subnet / network is reserved for the gateway. For that, we need to be connected to the network.
+1. `nmap -Pn -sS -sV -p445,3389 -f --data-length 200 -D [kali linux IP (Gateway)], [target IP]`
+2. In Wireshark we can see:
+   - fragmentation
+   - source is decoy ip we specified
+3. We want to change the source port to make it look less suspicious:
+4. `nmap -Pn -sS -sV -p445,3389 -f --data-length 200 **-g 53** -D [kali linux IP (Gateway)], [target IP]`
+
+## Optimizing Nmap Scans
+
+
+
+
+
+
+
+
+
 
 
 
