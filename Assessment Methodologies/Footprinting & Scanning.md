@@ -558,6 +558,32 @@ Host Discovery: Identify Network Interface
     Example: `nmap -sV --version-intensity 9 192.80.212.3`
     Purpose: Increase the depth of service version detection.
 
+## NMAP Scripting Engine (NSE)
+
+`ifconfig`, eth1
+`nmap -sn 192.224.77.0/24`
+`nmap -sS -sV -O -p- -T4 [target IP]`: Sin scan
+`ls -al /usr/share/nmap/scripts/`
+`ls -al /usr/share/nmap/scripts/ | grep -e "http"`: HTTP (Webserver) specific scripts. http-enum.nse performs basic http enumeration
+In the enumeration phase of a pentest, we don't want to exploit vulnerabilites yet.
+`nmap -sS -sV -sC -p- -T4 [target IP]`:Default nmap script scan. Provides us OS, kernel etc. Now, i could look for vulnerabilites that affect the version of mongoDB or ubuntu (target OS)
+check, which other mongoDB scripts are available. `nmap --help-help=mongodb-databases`
+`nmap -sS -sV --script=mongodb-info -p- -T4 [target IP]`
+`nmap --script=category`: specify script category
+memcached service is running, so we check for memcached scripts: `ls -al /usr/share/nmap/scripts/ | grep -e "memcached"`
+Lets see what it does: `nmap --script-help=memcached-info`
+run script: `nmap -sS -sV --script=memcached-info -p- -T4 [target IP]`
+Authentication is not required, so theres a potential vulnerability.
+
+How to combine:
+- serivce version detection scan
+- operating system detection scan
+- default nmap script scan
+
+`nmap -sS -A -p- -T4 [target IP]`
+
+# Evasion, Scan Performance & Output
+## Firewall Detection & IDS Evasion 
 
 
 
