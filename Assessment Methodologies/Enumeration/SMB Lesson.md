@@ -161,18 +161,248 @@ Commands Summary
   
 # SMB: Samba 1
 
-1. `nmap [target IP .3]`: nmap only assumes services
-2. `nmap  [target IP] -sV -p 139,445`
-3. `nmap [target IP] -sU --top-port 25 --open -sV`
-4. `nmap [target IP] -p 445 --script smb-os-discovery`
-5. `msfconsole`: metasploit framework
-6. `use auxiliary/scanner/smb/smb_version -> show options`
-7. msf5 auxiliary `set rhosts [target IP]`
-8. msf5 auxiliary `options`
-9. msf5 auxiliary `run`
-10. msf5 auxiliary `exploit`
-11. `nmblookup -A [target IP]`
-12. `smbclient -L [target IP] -N`: We see IPC, might able to connect to
-13. `rpcclient -U "" -N [target IP]`: connected, 
+nmap [target IP .3]
+
+Explanation: Performs a basic Nmap scan on the target IP to identify open ports and running services.
+2. Nmap Service Version Detection
+
+`nmap [target IP] -sV -p 139, 445`
+
+Explanation: Scans ports 139 and 445 to detect versions of services running on these ports, which are commonly associated with SMB.
+3. Nmap UDP Scan
+
+`nmap [target IP] -sU --top-ports 25 --open -sV`
+
+Explanation: Conducts a UDP scan on the top 25 ports and attempts to identify the service versions running on those open ports.
+4. SMB OS Discovery
+
+`nmap [target IP] -p 445 --script smb-os-discovery`
+
+Explanation: Uses the smb-os-discovery script to gather OS information from the SMB service on port 445.
+5. Start Metasploit Framework
+
+`msfconsole`
+
+Explanation: Launches the Metasploit Framework for further exploitation.
+6. Use SMB Version Auxiliary Module
+
+`use auxiliary/scanner/smb/smb_version`
+
+Explanation: Selects the SMB version scanner module within Metasploit to determine the SMB version on the target.
+7. Set Target IP for Metasploit Module
+
+`set rhosts [target IP]`
+
+Explanation: Configures the target IP address for the SMB version scanner module.
+8. Show Metasploit Module Options
+
+`options`
+
+Explanation: Displays the current configuration options for the SMB version scanner module.
+9. Run Metasploit Module
+
+`run`
+
+Explanation: Executes the SMB version scanner module to identify the SMB version on the target.
+10. Exploit (If Applicable)
+
+`exploit`
+
+Explanation: Attempts to exploit the target using the current module (in this context, it may run the same as run for auxiliary modules).
+11. NetBIOS Name Service Lookup
+
+`nmblookup -A [target IP]`
+
+Explanation: Performs a NetBIOS name service lookup to retrieve the NetBIOS names and MAC address of the target machine.
+12. List SMB Shares Without Authentication
+
+`smbclient -L [target IP] -N`
+
+Explanation: Lists available SMB shares on the target without requiring authentication, showing resources that might be accessible. The -L option lists the shares on the specified server, and the -N option tells smbclient not to prompt for a password, effectively attempting a null session.
+13. Connect to SMB with RPC
+
+`rpcclient -U "" -N [target IP]`
+
+Explanation: Connects to the SMB service on the target using the rpcclient tool with null session (no username and no password).
+
+### Summary of Commands
+
+1. `nmap [target IP .3]`: Basic scan to identify open ports and services.
+2. `nmap [target IP] -sV -p 139,445`: Service version detection on SMB ports.
+3. `nmap [target IP] -sU --top-ports 25 --open -sV`: UDP scan on top 25 ports with service version detection.
+4. `nmap [target IP] -p 445 --script smb-os-discovery`: OS discovery via SMB on port 445.
+5. `nmap --script nbstrat -p 137 192.218.102.3`: Extracts netbios nam
+6. `msfconsole`: Launches Metasploit Framework.
+7. `use auxiliary/scanner/smb/smb_version`: Selects the SMB version scanner in Metasploit.
+8. `set rhosts [target IP]`: Sets the target IP for the Metasploit module.
+9. `options`: Displays configuration options for the module.
+10. `run`: Executes the SMB version scan.
+11. `exploit`: Attempts exploitation with the current module.
+12. `nmblookup -A [target IP]`: Retrieves NetBIOS names and MAC address.
+13. `smbclient -L [target IP] -N`: Lists SMB shares without authentication.
+14. `rpcclient -U "" -N [target IP]`: Connects to SMB with RPC using null session. rpcclient is a tool used to execute client-side Microsoft RPC calls to an SMB server. It is particularly useful for enumerating information about the server.
+
+Questions
+
+    1. Find the default tcp ports used by smbd.
+    2. Find the default udp ports used by nmbd.
+    3. What is the workgroup name of samba server?
+    4. Find the exact version of samba server by using appropriate nmap script.
+    5. Find the exact version of samba server by using smb_version metasploit module.
+    6. What is the NetBIOS computer name of samba server? Use appropriate nmap scripts.
+    7. Find the NetBIOS computer name of samba server using nmblookup
+    8. Using smbclient determine whether anonymous connection (null session)  is allowed on the samba server or not.
+    9. Using rpcclient determine whether anonymous connection (null session) is allowed on the samba server or not.
+
+    1. 139, 445
+    2. 137, udp 
+    3. RECONLABS (Command 3)
+    4. Samba 4.3.11-Ubuntu (Command 4)
+    5. Windows 6.1 (Samba 4.3.11-Ubuntu)
+    6. SAMBA-RECON
+    7. SAMBA-RECON
+    8. Yes: public, john, aisha, emma, everyone, IPC$
+    9. Yes
+
+# SMB Server Reconnaissance: Samba 2
+`ip a`
+   - Displays network interfaces and their IP addresses on the local machine.
+
+2. `nmap [target IP .3]`
+   - Performs a basic scan to identify open ports and services on the target IP.
+
+3. `nmap [target IP] -sV -p 445`
+   - Detects the version of services running on port 445, typically used for SMB.
+
+4. `rpcclient -U "" -N [targetIP]`
+   - Connects to the target IP with a null session to interact with SMB services.
+
+5. `srvinfo`
+   - Queries the SMB server for detailed information about its configuration and operating system.
+
+6. `enum4linux -o [targetIP]`
+   - Enumerates information from an SMB server, including user and group details.
+
+7. `smbclient -L [targetIP] -N`
+   - Lists available SMB shares on the target machine without requiring authentication.
+
+8. `nmap [targetIP] -p 445 --script smb-protocols`
+   - Uses Nmap’s smb-protocols script to determine the SMB protocols supported by the target.
+
+9. `msfconsole`
+   - Launches the Metasploit Framework for advanced security testing.
+
+10. `msfconsole: use auxiliary/scanner/smb/smb2`
+    - Selects the SMB2 scanner module in Metasploit for detailed SMB2 testing.
+
+11. `msfconsole: set RHOSTS [target IP]`
+    - Sets the target IP address for the Metasploit module.
+
+12. `msfconsole: options`
+    - Displays the configuration options for the selected Metasploit module.
+
+13. `msfconsole: run`
+    - Executes the SMB2 scan to gather information or test for vulnerabilities.
+
+14. `msfconsole: exit`
+    - Exits the Metasploit Framework after testing is complete.
+
+15. `nmap [target IP] -p 445 --script smb-enum-users`
+    - Uses Nmap’s smb-enum-users script to enumerate users from the SMB server.
+
+16. `enum4linux -U [target IP]`
+    - Enumerates SMB users from the target server.
+
+17. `rpcclient -U "" -N [target IP]`
+    - Connects to the target SMB server with a null session for further interaction.
+
+18. `rpcclient: enumdomusers`
+    - Enumerates domain users from the SMB server using rpcclient.
+
+    `rpcclient: lookupnames admin`
+    - Looks up information about the specified user (e.g., 'admin') on the SMB server.
 
 
+Questions
+
+    Find the OS version of samba server using rpcclient.
+    Find the OS version of samba server using enum4Linux.
+    Find the server description of samba server using smbclient.
+    Is NT LM 0.12 (SMBv1) dialects supported by the samba server? Use appropriate nmap script.
+    Is SMB2 protocol supported by the samba server? Use smb2 metasploit module.
+    List all users that exists on the samba server  using appropriate nmap script.
+    List all users that exists on the samba server  using smb_enumusers metasploit modules.
+    List all users that exists on the samba server  using enum4Linux.
+    List all users that exists on the samba server  using rpcclient.
+    Find SID of user “admin” using rpcclient.
+
+
+First, we do a ping on our target address 192.35.143.3 to ensurse that its online.
+`ping 192.35.143.3`
+
+Then, we want to find out the OS version of the samba server using rpcclient:
+`rpcclient -U "" -N 192.35.143.3`
+
+We do a srvinfo to find out the OS:
+`srvinfo`
+
+**OS Version of Samba Server using rpcclient: 6.1**
+
+We want to find the os version again with enum4linux:
+`enum4linux -o 192.35.143.3`
+**OS Version of Samba Server using enum4linux: 6.1**
+
+Now we want to enumerate the server description using smbclient:
+`smbclient -L 192.35.143.3 -N`: -L lists available shares on the server. -N means no password is used, attempting an anonymous connection.
+**Server description: Workgroup: Reconlabs, Master: SAMBA-Recon
+
+We want to find out if NT LM 0.12 (SMBv1) dialects is supported by the samba server. We use a script:
+`nmap 192.35.143.3 -p 445 --script smb-protocols`
+**NT LM 0.12 (SMBv1) is supported**
+
+Is SMB2 protocol supported by the samba server? we use a smb2 metasploit module:
+`msfconsole`
+    msf5:`use auxiliary/scanner/smb/smb2`
+    msf5:`set RHOSTS 192.35.143.3`
+    msf5:`options`
+    msf5:`run`
+**We can see, that the samba server does support SMB (dialect 255.2)**
+
+We want to list all users that exist on the samba server using a nmap script:
+`nmap 192.35.143.3 -p 445 --script smb-enum-users`
+**admin, aisha, elie, emma, john, shawn**
+
+Now we wanna do the same again, but this time with the smb_enummuers metasploit modules:
+`msfconsole`
+    msf5:`search smb_enumusers`
+    msf5:`use auxiliary/scanner/smb/smb_enumusers`
+    msf5:`set RHOSTS 192.168.1.100`
+    msf5:`show options`
+    msf5:`run`
+**john, elie, aisha, shawn, emma, admin**
+
+We want to enumerate the users again, using enum4linux:
+`enum4linux -U 192.35.143.3`: -U: This flag specifies that enum4linux should enumerate and display the user accounts on the target system
+**john, ellie, aisha, shawn, emma, admin**
+
+We want to find all users using rpcclient:
+`rpcclient -U "" -N 192.35.143.3`
+    rpcclient: `enumdomusers`
+**john, elie, aisha, shawn, emma, admin**
+
+We need to find the SID of user "admin" using rpcclient:
+    rpcclient: `lookupnames admin`
+**S-1-5-21-4056189605-2085045094-1961111545-1005**
+
+
+
+
+
+
+
+
+
+
+
+
+    
