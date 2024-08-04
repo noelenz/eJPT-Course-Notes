@@ -608,7 +608,54 @@ On every network wihtin the subnet / network is reserved for the gateway. For th
 3. We want to change the source port to make it look less suspicious:
 4. `nmap -Pn -sS -sV -p445,3389 -f --data-length 200 **-g 53** -D [kali linux IP (Gateway)], [target IP]`
 
-## Optimizing Nmap Scans
+## Optimizing Nmap Scans | Wiederholen
+useful options:
+`--scan-delay/--max-scan-delay <time>:`
+`--host-timeout <time>`
+`nmap -Pn -sS -F --host-timeout 5s [target IP.0/24]` (probably misses systems if time is to little)
+`nmap -Pn -sS -sV -F [target IP.0/24]` 
+`nmap -sS -sV -F [target IP]`
+`nmap -sS -sV -F --scan-delay 5s [target IP]`: TCP
+
+## Nmap Output Formats
+-oN = normal format, saves result how you see it
+-oX = xml, offers a conversion layer and import it into metasploit framework
+-oS = Script kiddie
+-oG = outputs scan results in grepable format
+
+-oA = all 3 normal formats at once (oN, oX, oG)
+-v  = Increase verbosity
+--reason = displays the reason a port is in a particular state
+
+`nmap -Pn -sS -F -T4 [target IP] -oN \path\`
+  - Pn: Skip host discovery
+  - sS: syn can
+  - F: scan 100 of the most common ports
+  - T4: increase speed
+  - oN: normal format
+
+How to import nmap scan results in metasploit framework (xml format output):
+1. `service postgresql start`
+2. `msfconsole`
+3. msf6: `workspace -h`
+4. msf6: `workspace -a pentest_1`
+5. msf6: `workspace`
+6. msf6: `db_status`, check status, is msf connected to the postgresql database where the data is stored?
+7. msf6s: `dbimport nmap_xml.xml`
+8.  msf6s: `hosts`
+9.  msf6: `services`
+10.  msf5: `nmap -Pn -sS -sV -O -p445 [target IP] `
+11.  msf6s: `hosts`, metasploit framework updates field
+
+Grepable Format:
+`nmap -Pn -sS -F -T4 [target IP] -oG nmap_grep.txt`
+`cat nmap_gep.txt`, we see that its a grepable format
+
+
+
+
+
+
 
 
 
