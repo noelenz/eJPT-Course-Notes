@@ -56,5 +56,14 @@ Creates a file with the username and performs a brute-force attack with nmap:
 `cat users`
 `nmap [target IP] --script ftp-brute --script-args userdb=/root/users -p 21`
 
-These commands help to check the target system for vulnerabilities and ensure it is protected against unauthorized access.
+
+Questions
+
+    1. What is the version of FTP server?
+    2. Use the username dictionary /usr/share/metasploit-framework/data/wordlists/common_users.txt and password dictionary /usr/share/metasploit-framework/data/wordlists/        unix_passwords.txt       to check if any of these credentials work on the system. List all found credentials.
+    3. Find the password of user “sysadmin” using nmap script.
+    4. Find seven flags hidden on the server.
+
+
+
 
