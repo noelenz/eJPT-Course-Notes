@@ -395,10 +395,140 @@ We need to find the SID of user "admin" using rpcclient:
 **S-1-5-21-4056189605-2085045094-1961111545-1005**
 
 
+## SMB: Samba 3
+
+**Enumerate SMB Shares with Nmap**:
+
+    `nmap [target IP] -p 445 --script smb-enum-shares`
+Scans port 445 to enumerate shared directories on the Samba server using the `smb-enum-shares` script.
+
+2. **Use Metasploit to Enumerate SMB Shares**:
+    `msfconsole`
+    - Launches the Metasploit Framework.
+    msf5 > `use auxiliary/scanner/smb/smb_enumshares`
+    msf5 `auxiliary(scanner/smb/smb_enumshares) > set rhosts [target IP]`
+    msf5 `auxiliary(scanner/smb/smb_enumshares) > exploit`
+    - Configures and runs the `smb_enumshares` module to enumerate shared directories on the target.
+
+3. **Enumerate Shares with enum4linux**:
+  
+    `enum4linux -S [target IP]`
+    - Enumerates shared directories on the target using `enum4linux`.
+
+4. **List Shares with smbclient**:
+    
+    `smbclient -L [target IP] -N`
+    - Lists available shares on the target server without authentication.
+
+5. **Enumerate Group Information with enum4linux**:
+
+    `enum4linux -G [target IP]`
+    - Retrieves group information from the target using `enum4linux`.
+
+6. **Connect to Samba Server with rpcclient**:
+    
+    `rpcclient -U "" -N [target IP]`
+    - Connects to the Samba server using an anonymous (null session) connection.
+
+7. **Perform a Full Information Scan with enum4linux**:
+
+    `enum4linux -i [target IP]`
+    - Performs a comprehensive information scan on the target using `enum4linux`.
+
+9. **Access a Specific Share with smbclient**:
+    
+    `smbclient //[target IP]/Public -N`
+    - Connects to the `Public` share on the target server without authentication.
+
+    Inside the `smbclient` prompt:
+    smb: \> cd secret
+    smb: \> ls
+    smb: \> cat flag
+    smb: \> get flag
+    ```
+    - Navigates to the `secret` directory, lists files, displays the contents of the `flag` file, and downloads it.
+
+10. **View the Downloaded Flag File**:
+    `cat flag`
+    - Displays the contents of the downloaded `flag` file.
+
+### Commands Summary
+
+- `nmap [target IP] -p 445 --script smb-enum-shares`: Scans for SMB shares on port 445.
+- `msfconsole`: Launches Metasploit Framework.
+    - `use auxiliary/scanner/smb/smb_enumshares`: Uses the `smb_enumshares` module in Metasploit.
+    - `set rhosts [target IP]`: Sets the target IP for the module.
+    - `exploit`: Runs the module to enumerate shares.
+- `enum4linux -S [target IP]`: Enumerates shares with `enum4linux`.
+- `smbclient -L [target IP] -N`: Lists SMB shares without authentication.
+- `enum4linux -G [target IP]`: Retrieves group information with `enum4linux`.
+- `rpcclient -U "" -N [target IP]`: Connects to the server with `rpcclient` using a null session.
+- `enum4linux -i [target IP]`: Performs a comprehensive information scan.
+- `smbclient //[target IP]/Public -N`: Connects to a specific share.
+    - `cd secret`: Changes directory to `secret`.
+    - `ls`: Lists files in the current directory.
+    - `cat flag`: Displays the contents of the `flag` file.
+    - `get flag`: Downloads the `flag` file.
+- `cat flag`: Displays the contents of the downloaded file.
 
 
+Questions
 
+    List all available shares on the samba server using Nmap script.
+    List all available shares on the samba server using smb_enumshares Metasploit module.
+    List all available shares on the samba server using enum4Linux.
+    List all available shares on the samba server using smbclient.
+    Find domain groups that exist on the samba server by using enum4Linux.
+    Find domain groups that exist on the samba server by using rpcclient.
+    Is samba server configured for printing?
+    How many directories are present inside share “public”?
+    Fetch the flag from samba server.
 
+First, we do a ping to ensure that our target is reachable:
+`ping 192.86.4.3`
+
+After that, we'll do a nmap script scan to enumerate shares:
+`nmap 192.86.4.3 445 -p 445 --script smb-enum-shares`
+**We see a public, IPC$, everyone, aisha, emma and john share**
+
+Now, we want to use the smb_enumshares Metasploit module for share enumeration:
+`msfconsole`
+    - `use auxiliary/scanner/smb/smb_enumshares`
+    - `set rhosts 192.86.4.3`
+    - `exploit`
+**We see exactly the same shares again**
+
+Same thing again, but with enum4linux:
+`enum4linux -S 192.86.4.3`
+**Same shares again**
+
+Same thing again, but with smbclient:
+`smbclient -L 192.86.4.3 -N`
+**Same shares again**
+
+After that, we want to find domain groups that exist on the samba server by using enum4linux:
+`enum4linux -G 192.86.4.3`
+**domain groups: Maintainer, Reserved**
+
+Now we want to find domain groups again using rpcclient
+`rpcclient -U "" -N 192.86.4.3`
+    rpcclient: `enumdomgroups`
+**domain groups: Maintainer, Reserved**
+
+We want to find out if samba server is configured for printing: 
+`enum4linux -i 192.86.4.3`
+**We don't see any printers**
+
+We want to find out how many directories are present inside share "public":
+`smbclient //192.86.4.3/Public -N`
+**2 directories**
+
+Now we want to get the flag file in that directory:
+`cd secret`
+`get flag`
+`èxit`
+`cat flag`
+**03ddb97933e716f5057a18632badb3b4**
 
 
 
