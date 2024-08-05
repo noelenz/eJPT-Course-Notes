@@ -1,5 +1,3 @@
-# FTP (File Transfer Protocol)
-
 # FTP Server Reconnaissance Basics: A Step-by-Step Guide
 
 This guide provides various commands to FTP reconnaisance basics.
