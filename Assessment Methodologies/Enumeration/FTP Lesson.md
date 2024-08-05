@@ -1,8 +1,8 @@
 # FTP (File Transfer Protocol)
 
-# Network and Security Assessment: A Step-by-Step Guide
+# FTP Server Reconnaissance Basics: A Step-by-Step Guide
 
-This guide provides various commands to FTP.
+This guide provides various commands to FTP reconnaisance basics.
 
 ### 1. Ping Command
 
