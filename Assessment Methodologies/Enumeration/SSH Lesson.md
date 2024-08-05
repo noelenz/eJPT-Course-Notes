@@ -1,15 +1,25 @@
 # SHH (Secure Shell)
 
 `ip a`
+
 `ping 192.28.51.3`
+
 `nmap 192.28.51.3`
+
 `nmap 192.28.51.3 -sV O`: runnng OpenSSH 7.2p2
+
 `ssh root@192.28.51.3`
+
 `nc 192.28.51.3`
+
 `nmap 192.28.51.3 -p 22 --script ssh2-enum-algos`
+
 `nmap 192.28.51.3 -p 22 --script ssh-hostkey --script-args ssh_hostkey=full`
+
 `nmap 192.28.51.3 -p 22 --script ssh-auth-methods --script-args="ssh.user=student"`
+
 `nmap 192.28.51.3 -p 22 --script ssh-auth-methods --script-args="ssh.user=admin"`
+
 `ssh student@192.28.51.3`
 
 
