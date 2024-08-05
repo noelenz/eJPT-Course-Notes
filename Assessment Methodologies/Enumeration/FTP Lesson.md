@@ -77,7 +77,36 @@ Questions
 **sysadmin:654321 - Valid credentials**
 ![grafik](https://github.com/user-attachments/assets/80eb1d5b-9dfb-4215-9e2d-64d79919259e)
 
+### FTP Login
 
+`ip a`
+`ping [target IP]`
+`nmap [target IP]`: port 21 open
+`nmap [target IP] -p 21 -sV`: version: vsftpd 
+`nmap [target IP] -p 21 --script ftp-anon`: Anonymous FTP login is allowed
+`ftp [target IP]`: anonymous, password: none
+`ls`
+    ftp:`get flag`
+    ftp: `bye`
+`cat flag`
+
+
+
+1. Find the version of vsftpd server.
+2. Check whether anonymous login is allowed on the ftp server using nmap script.
+3. Fetch the flag from FTP server.
+
+We want to find out the version of the vsftpd server:
+`nmap 192.158.73.3 -p 21 -sV`
+**vsftpd 3.0.3**
+
+After that we want to check if anonymous login is allowed on the ftp server using following nmap script:
+`nmap 192.158.73.3 -p 21 --script ftp-anon`
+**Anonymous login allowed**
+
+So we login:
+`ftp login`
+and we get the flag.
 
 
 
