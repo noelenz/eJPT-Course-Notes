@@ -145,7 +145,7 @@ BadBot is banned
 
 
 
-# HTTP - IIS
+# HTTP - IIS - reformatted with ChatGPT
 
 ## Initial Scans
 
