@@ -1,4 +1,4 @@
-# HTTP IIS
+# HTTP - IIS
 
 `nmap 10.2.19.52`
 
@@ -42,7 +42,7 @@ Objective:
     Enumerated HTTP methods
     Detect WebDAV configuration - etc.
 
-# HTTP . Apache
+# HTTP - Apache
 
 Tools used:
 - nmap
