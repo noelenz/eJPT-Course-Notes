@@ -64,11 +64,17 @@ We need to find out what service is running on port 80:
 `nmap 192.22.67.3 -p 80 -sV -script banner`: http-server-header: Apache/2.4.18 (Ubuntu)
 
 `msfconsole`
+
     msf5: `use auxiliary/scanner/http/http_version`
+    
     msft: `set rhosts 192.22.67.3`
+    
     msf5: `options`
+    
     msf5: `run`
+
     msf5: `exit`
+    
     **Apache/2.4.18 (Ubuntu)**
 
 `curl 192.22.67.3 | more`: gives us code and information. Apache2 is used 
@@ -78,27 +84,43 @@ We need to find out what service is running on port 80:
 `browsh --startup-url 192.22.67.3`: gives us a browser GUI. Apache2 is used
 
 `lynx http://192.22.67.3`: Apache2
+
 `msfconsole`
+
     msf5: `use auxiliary/scanner/http/brute_dirs`
+
     msf5: `show options`
+    
     msf5: `set rhosts 192.22.67.3`
+    
     msf5: `options`
+    
     msf5: `exploit`
+    
     msf5: `exit`
+    
 metasploit brute_dirs gives us following output:
+
 Found http://192.22.67.3:80/dir/ 200
+
 Found http://192.22.67.3:80/src/ 200
 
 `dirb http://192.22.67.3 /usr/share/metasploit-framework/data/wordlists/directory.txt`
-+ http://192.22.67.3//data (CODE:301|SIZE:309)           
++ http://192.22.67.3//data (CODE:301|SIZE:309)          
 + http://192.22.67.3//dir (CODE:301|SIZE:308)
 
 `msfconsole`
+
     msf5: `use auxiliary/scanner/http/robots_txt`
+    
     msf5: `set rhosts 192.22.67.3`
+    
     msf5: `options`
+    
     msf5: `run`
+    
 BadBot is banned
+
     msf5: `curl http://192.22.67.3/cgi.bin/ | more`
 
 1. Which web server software is running on the target server and also find out the version using nmap.
