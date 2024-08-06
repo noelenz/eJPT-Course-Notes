@@ -42,4 +42,76 @@ Objective:
     Enumerated HTTP methods
     Detect WebDAV configuration - etc.
 
+# HTTP . Apache
+
+Tools used:
+- nmap
+- msf:     A penetration testing framework for finding, exploiting, and validating vulnerabilities.
+- curl:    A command-line tool for transferring data with URLs, supporting various protocols like HTTP, HTTPS, FTP, and more.
+- wget:    A command-line utility for downloading files from the web using HTTP, HTTPS, and FTP protocols.
+- browsh:  A text-based web browser that renders modern web pages in a terminal, supporting HTML5, CSS3, and JavaScript.
+- lynx:    A text-based web browser for navigating web pages via a command-line interface.
+- dirb:    A web content scanner that searches for hidden web objects and directories on a web server.
+
+`ip a`
+
+We want to fnd out which ports are open:
+`nmap 192.22.67.3`: Port 80 open
+
+We need to find out what service is running on port 80:
+`nmap 192.22.67.3 -p80 -sV`: Service: http, version: apache httpd 2.4.18
+
+`nmap 192.22.67.3 -p 80 -sV -script banner`: http-server-header: Apache/2.4.18 (Ubuntu)
+
+`msfconsole`
+    msf5: `use auxiliary/scanner/http/http_version`
+    msft: `set rhosts 192.22.67.3`
+    msf5: `options`
+    msf5: `run`
+    msf5: `exit`
+    **Apache/2.4.18 (Ubuntu)**
+
+`curl 192.22.67.3 | more`: gives us code and information. Apache2 is used 
+
+`wget "http://192.22.67.3"`: retrieves web files, Apache2 is used
+
+`browsh --startup-url 192.22.67.3`: gives us a browser GUI. Apache2 is used
+
+`lynx http://192.22.67.3`: Apache2
+`msfconsole`
+    msf5: `use auxiliary/scanner/http/brute_dirs`
+    msf5: `show options`
+    msf5: `set rhosts 192.22.67.3`
+    msf5: `options`
+    msf5: `exploit`
+    msf5: `exit`
+metasploit brute_dirs gives us following output:
+Found http://192.22.67.3:80/dir/ 200
+Found http://192.22.67.3:80/src/ 200
+
+`dirb http://192.22.67.3 /usr/share/metasploit-framework/data/wordlists/directory.txt`
++ http://192.22.67.3//data (CODE:301|SIZE:309)           
++ http://192.22.67.3//dir (CODE:301|SIZE:308)
+
+`msfconsole`
+    msf5: `use auxiliary/scanner/http/robots_txt`
+    msf5: `set rhosts 192.22.67.3`
+    msf5: `options`
+    msf5: `run`
+BadBot is banned
+    msf5: `curl http://192.22.67.3/cgi.bin/ | more`
+
+1. Which web server software is running on the target server and also find out the version using nmap.
+2. Which web server software is running on the target server and also find out the version using suitable metasploit module.
+3. Check what web app is hosted on the web server using curl command.
+4. Check what web app is hosted on the web server using wget command.
+5. Check what web app is hosted on the web server using browsh CLI based browser.
+6. Check what web app is hosted on the web server using lynx CLI based browser.
+7. Perform bruteforce on webserver directories and list the names of directories found. Use brute_dirs metasploit module.
+8. Use the directory buster (dirb) with tool/usr/share/metasploit-framework/data/wordlists/directory.txt dictionary to check if any directory is present in the root folder of the web server. List the names of found directories.
+9. Which bot is specifically banned from accessing a specific directory?
+
+
+
+
 
