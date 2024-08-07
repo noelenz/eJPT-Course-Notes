@@ -1,6 +1,6 @@
 # Penetration Testing Student (eJPT) Documentation
 
-Welcome to the most comprehensive documentation on GitHub for the Penetration Testing Student (PTS) learning path. This repository was designed to help me prepare for the eLearnSecurity Junior Penetration Tester (eJPT) certification exam. Here, you will find detailed notes, practical examples, and useful resources to enhance your learning experience. Its completely written by myself while studying for the eJPT.
+Welcome to the most comprehensive documentation on GitHub for the Penetration Testing Student (eJPT) learning path. This repository was designed to help me prepare for the eLearnSecurity Junior Penetration Tester (eJPT) certification exam. Here, you will find detailed notes, practical examples, and useful resources to enhance your learning experience. Its completely written by myself while studying for the eJPT.
 
 ## Course Structure
 
