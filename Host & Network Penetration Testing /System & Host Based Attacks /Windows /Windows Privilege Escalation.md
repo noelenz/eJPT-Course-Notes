@@ -128,3 +128,7 @@
   
   THis metasploit module can be used to identify kernel exploits on a target::
   multi/recon/local_exploit_suggester
+
+# Bypassing UAC With UACMe 
+
+  
