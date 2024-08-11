@@ -19,7 +19,7 @@
   - Identify kernel vulnerabilities.
   - Download, compile, and transfer kernel exploits to the target system.
 
-## Tools & Environment
+## Tools & Environment:
 - **Windows Exploit Suggester**: Compares the target's patch levels against a vulnerability database to detect missing patches and potential exploits.
 - **Windows-Kernel-Exploits**: A collection of Windows Kernel exploits sorted by CVE.
 
