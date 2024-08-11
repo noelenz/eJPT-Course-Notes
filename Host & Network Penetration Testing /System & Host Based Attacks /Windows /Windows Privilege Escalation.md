@@ -13,7 +13,7 @@
   
 - Exploiting the Windows kernel allows code execution with the highest system privileges, potentially leading to full control over the target system.
 
-## Windows Kernel Exploitationv
+## Windows Kernel Exploitation
 - **Targeting Vulnerabilities**: Windows kernel exploits focus on specific vulnerabilities to execute code with elevated privileges.
 - **Privilege Escalation Process**:
   - Identify kernel vulnerabilities.
