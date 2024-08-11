@@ -126,9 +126,26 @@
    `whoami`  
    - Confirms successful privilege escalation by checking the user identity, expecting "nt authority\system".
   
-  THis metasploit module can be used to identify kernel exploits on a target::
+  THis metasploit module can be used to identify kernel exploits on a target:
   multi/recon/local_exploit_suggester
 
-# Bypassing UAC With UACMe 
+# Bypassing UAC With UACMe
+- User Account Control (UAC) is a Windows security feature introducedin Windows Vista that is used to prevent unauthorized changes from being made to the operating system.
+- UAC is used to ensure that changes to the operating system require approval from the administrator or a user account that is part of the local administrators group
+- A non-privileged user attempting to execute a program with elevated privileges will be promoted with the UAC credential prompt, whereas a privileged user will be prompted with with a consent prompt.
+- Attacks can bypass UAC in order to execute malicious executables with elevaed privileges.
 
-  
+## Bypassing UAC
+- We will need to have access to a user account that is part of the local administrators group on the Windows target system
+- UAC allowes a program to be executed with administrative privileges, consequently prompting the user for confirmation.
+- UAC has various integrity levels ranging from low to high, if the UAC protection level is set below high, Windows programs can be executed with elevated privileges without prompting the user for confirmation.
+- Tool and technique used will depend on the version of Windows running on the target system.
+## Bypassing UAC With UACME
+- UACMe is an open source, robust privilege escalation tool which can be used to bypass Windows UAC by leveraging various techniques.
+- UACMe GitHub repository contains a documented list of methods that can be used to bypass UAC on multiple versions of Windows ranging from Windows 7 to Windows 10
+- It allows attackers to execute malicious payloads on a Windows target with administrative/elevated privileges by abusing the inbuilt WIndows AuteElevate tool.
+- The UACMe GitHub repository has more than 60 exploits that can be used to bypass UAC depending on the version of Windows running on the target.
+
+## Demo
+
+
