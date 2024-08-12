@@ -21,3 +21,19 @@
   - All characters are then converted into uppercase
   - Each chunk is then hashed separately with the DES algorithm.
 - LM hashing is generally considered to be a weak protocol and can easily be cracked, primarly because the password hash does not include salts consequently making brute-force and rainbow table attacks effective against LM hashes.
+
+![grafik](https://github.com/user-attachments/assets/a26dee98-a0ee-4713-b809-63b8813629c4)
+
+## NTLM (NT HASH)
+- NTLM is a collection of authentication protocols that are utilized in Windows to facilitate authentication between computers. The authentication process involves using a valid username and password to authenticate successfully.
+- Form Windows Vista onwards, Windows disables LM hashing and utilizes NTLM hashing.
+- When a user account is created, it is encrypted using the MD4 hashing algorithm, while the original password is disposed of.
+- NTLM improves upon LM in the following ways:
+  - Does not split the hash in to two chunks
+  - Case sensitive
+  - Allows the use of symbols and unicode characters
+![grafik](https://github.com/user-attachments/assets/448a152b-8e1c-4b6d-a87d-f2def4139e73)
+
+
+
+
