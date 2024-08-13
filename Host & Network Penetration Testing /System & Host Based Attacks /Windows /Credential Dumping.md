@@ -193,5 +193,7 @@ still in meterpreter session
 `lsadump::secrets`:DUMPING LSASECRETS
 `sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon
 
+Mimikatz is open source
+
 
 
