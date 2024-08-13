@@ -194,6 +194,6 @@ still in meterpreter session
 `sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon
 
 Mimikatz Haous
-
+Masj
 
 
