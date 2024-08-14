@@ -217,4 +217,13 @@ still in meterpreter session
 
 `sekurlsa::logonpasswords`:Display logon passwords, if configured passwords show in clear text when logon is configured as cleartext
 
+# Pass-The-Hash Attacks
+## Pass-The-Hash
+- Pass-the-hash is an exploitation technique that involves captturing or harversting NTLM hashes or clear-text passwords and utilizing them to authenticate with the target legitimately.
+- We can use multiple tools to facilitate a Pass-The-Hash atack:
+  - Metasploit PsExec module
+  - Crackmapexec
+  - This technique will allow us to obtain access to the target system via legitimate credentials as opposed to obtaining acces via service exploitation
+
+
 
