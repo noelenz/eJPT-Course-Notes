@@ -268,11 +268,11 @@ We put this meterpreter session in the background using ctrl z
 
 `search psexec`
 
-We look for 9. 
+We look for exploit/windows/smb/psexec. 
 
-`use [9]`
+`use [ID]`
 
-We use the same payload as before
+We use the same payload as before: windows/meterpreter/reverse_tcp
 
 `show options`
 
