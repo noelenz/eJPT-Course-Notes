@@ -6,7 +6,7 @@
   - LM
   - NTLM
 - Windows disables LM hashing and utilizes NTLM hashing from Windows Vista onwards.
-zztrf
+
 ## SAM Database
 - SAM (Security Account Manager) is a database file that is responsible for managing user accounts and passwords on Windows. All user account passwords stored in the SAM database are hashed.
 - The SAM database file cannot be copied while the OS is running.
