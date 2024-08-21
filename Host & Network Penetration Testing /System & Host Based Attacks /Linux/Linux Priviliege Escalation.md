@@ -122,3 +122,10 @@ Gives us Exploits and OS information. We download the exploit from the website. 
 
   `crontab -l`
   Re-checks the scheduled Cron jobs to verify any changes.
+
+# Exploiting SUID Binaries
+- In addition to the three main file access permissions (read, write and execute), Linux also provides users with specialised permissions that can be utilized in specific situations. One of these access permissions is the SUID (Set Owner User ID) permission.
+- When applied, this permission provides users with the ability to execute a script or binary with the permissions of the file owner as opposed to the user that is running the script or binary.
+- SUID permissions are typically used to provide unprivileged users with the ability to run specific scripts or binaries with "root" permissions. It is to be noted, however, that the provision of elevate privileges is limited to the execution of the script and does not translate to elevation of privileges, however, if inproperly configured unprivileged users can exploit misconfigurations or vulnerabilities within the binary or script to obtain an elevated session.
+
+
