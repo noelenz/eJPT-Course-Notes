@@ -18,7 +18,7 @@ We first exploit the target:
 
 `ifconfig, eth1`
 
-`nmap -sV [targetIP]`
+`nmap -sV 192.209.144.3`
 
 We check if this version of proftpd is vulnerable to a exploit:
 
@@ -28,7 +28,7 @@ We got a Backdoor Command Execution module
 
 `service postgresql start && msfconsole`
 
-`setg rhosts [targetIP]`
+`setg rhosts 192.209.144.3`
 
 `search proftpd`
 
