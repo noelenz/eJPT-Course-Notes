@@ -82,7 +82,7 @@ We copy post/linux/gather/hashdump
 
 `run`
 
-This will get the user accs that have passwords and gives us the hashed passwords and saves them.
+This will get the user accs that have passwords and gives us the hashed passwords and saves them. 
 
 
 
