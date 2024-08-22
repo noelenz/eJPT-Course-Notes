@@ -125,8 +125,54 @@ Gives us Exploits and OS information. We download the exploit from the website. 
 
 # Exploiting SUID Binaries
 - In addition to the three main file access permissions (read, write and execute), Linux also provides users with specialised permissions that can be utilized in specific situations. One of these access permissions is the SUID (Set Owner User ID) permission.
-- When applied, this permission provides users with the ability to execute a script or binary with the permissions of the file owner as opposed to the user that is running the script or binary.
+- When applied, this permission provides users with the ability to execute a script or binary with the   of the file owner as opposed to the user that is running the script or binary.
 - SUID permissions are typically used to provide unprivileged users with the ability to run specific scripts or binaries with "root" permissions. It is to be noted, however, that the provision of elevate privileges is limited to the execution of the script and does not translate to elevation of privileges, however, if inproperly configured unprivileged users can exploit misconfigurations or vulnerabilities within the binary or script to obtain an elevated session.
+- This is the functionality that we will be attempting to exploit in order to elevate our privs, however, the success of our attack will depend on the following factors:
+  - Owner of the success of our attack will depend on the following factors:
+    - Owner of the SUID binary - Given that we are attempting to elevate our privs, we will only be exploiting SUID binaries that are owned by the "root" user or other priveleged users.
+    - Access permissions - We will require executeable permissions in order to execute the SUID binary.
+   
+## Demo: Exploiting SUID Binaries
+
+`whoami`
+
+`groups student`
+
+`pwd`
+
+`ls -al`
+
+We have 2 binaries, greetins and welcome s: suid permission
+
+`./greetings`
+
+`./welcome`
+
+We learn more about the welcome binary:
+
+`file welcoem`
+
+`strings welcome`
+
+We get the share object (1.) etc. it also calls up the greetings binary. We modify the greetings binary:
+
+`rm greetings`
+
+we create our own binary:
+
+`cp /bin/bash greetings`
+
+`ls`
+
+Because the welcome binary calls up the greetings binary it will execute bash with root
+
+`./welcome`
+
+We got root, because the greetings binary is simply just a bash binary
+
+`id`
+
+`cat /etc/shadow`
 
 
 
