@@ -9,6 +9,7 @@
 - The shadow file can only be accessed and read by the root account, this is a very important security feature as it prevents other accounts on the system from accessing the hashed passwords.
 
   - The passwd file gives us information in regards to the hashing algorithm that is being used and the password hash, this is very helpful as we are able to determine the type of hashing algorithm that is being used and its strength. We can determine this by looking at the number after the username encapsulated by the dollar symbol ($)
+
 ![image](https://github.com/user-attachments/assets/e49a471f-b98a-4efb-82d5-f2b74c1a8789)
 
 ## Demo
