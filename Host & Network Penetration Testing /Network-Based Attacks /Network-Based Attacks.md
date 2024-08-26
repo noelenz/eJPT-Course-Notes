@@ -398,3 +398,67 @@ CTRL + C
 We have found the FLAG2: c8f58de67f44f49264e6c99e8f17110c
 
 This file is the ultimate proof for the client. The organization files are not safe. Therefore, policies and proper configurations should be implemented inside and outside the perimeter.
+
+# SNMP Enumeration
+
+SNMP is a widely used protocol for monitoring and managing networked devices, such as routers, switches, printers, servers and more.
+It allows Network admins to query devices for status information. configure certain settings, and recieve alerts or traps when specific events occur.
+
+- SNMP is an application layer protocol that typically uses UDP for transport. It involves three primary components:
+  - SNMP Manager: The system responsible for querying and interacting wiith SNMP agents on networked devices.
+  - SNMP Agent: Software running on networked devices that responds to SNMP queries and sends traps.
+  - Management Information Base (MIB): A hierarchical database that defines the structure of data available through SNMP. Each piece of data has a unique Object Identifier (OID).
+
+- Versions of SNMP:
+  - SNMPv1: The earliest versions, using community strings (essentialls passwords) for authentication.
+  - SNMPv2c: An improved version with support for bulk transfers but still relying on community strings for authentication.
+  - SNMPv3: Introduced security features, including encryption, message integrity, and user based authentication.
+- Ports:
+  - Port 161 (UDP): Used for SNMP queries
+  - Port 162 (UDP): Used for SNMP traps (notifications).
+
+ ### SNMP Enumeration
+
+ - SNMP enumeration involves querying SNMP-enabled devices to gather information useful for identifying potential vulnerabilities, misconfigurations, or points of attack.
+ - Here are the key objectives and outcomes of SNMP enumeration during a pentest:
+  - Identifying the SNMP-Enabled Devices (NMAP)
+  - Extract System Information
+  - Identifying SNMP Community Strings
+  - Retrieve Network Configurations
+  - Collect User and Information
+  - Identifying Services and Applications
+
+## Demo: SNMP Enumeration
+
+`cat /etc/hosts`
+
+`nmap -sU -p 161 demo.ine.local`
+
+We see that SNMP is running on the target. We try and perform a brute-force to identify the SNMP server community strings to access the target. 
+
+`ls -al /usr/share/nmap/scripts/ | grep -e "snmp"`
+
+Default wordlist: `ls -al /usr/share/nmap/nselib/data/ | grep snmp`
+
+`nmap -sU -p 161 --script=snmp-brute demo.ine.local`
+
+We can utilize a tool like snmp walk to extract new information. 
+
+`snmpwalk -V 1 -c public demo.ine.local`
+
+`nmap -sU -p 161 --script snmp-* demo.ine.local > snmp_info`
+
+`cat snmp_info`
+
+We can use the information obtained for a brute-force attack:
+
+`hydra -l administrator -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt demo.ine.local smb`
+
+We can use the metasploit psexec module to exploit the system.
+
+
+
+
+
+
+
