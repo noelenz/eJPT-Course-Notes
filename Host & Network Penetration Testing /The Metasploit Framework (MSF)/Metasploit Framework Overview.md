@@ -64,6 +64,19 @@
 - User specified modules are stored under the following directory on Linux systems:
     ~/.ms4/modules
 
+# Penetration Testing with MSF
+
+- We can adopt the PTES (Penetration Testing Execution Standard) as a roadmap to understand the various phases that make up a penetration test and how Metasploit can be integrated in to each phase.
+
+## Penetration Testing Execution Standard
+
+Metholody with the aim of addressing the need for a comprehensive and up-to-date standard for penetration testing.
+![grafik](https://github.com/user-attachments/assets/e04a49a2-1e3d-4ad5-8b79-98d75a478dc9)
+
+![grafik](https://github.com/user-attachments/assets/2f8e02b3-1bb7-4765-bbea-505e20818445)
+
+
+
 
 
 
