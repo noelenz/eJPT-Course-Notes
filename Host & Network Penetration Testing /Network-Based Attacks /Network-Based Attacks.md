@@ -440,7 +440,7 @@ We see that SNMP is running on the target. We try and perform a brute-force to i
 
 Default wordlist: `ls -al /usr/share/nmap/nselib/data/ | grep snmp`
 
-`nmap -sU -p 161 --script=snmp-brute demo.ine.local`
+`nmap -sU -p 161 --script=snmp-brute.nse demo.ine.local`
 
 We can utilize a tool like snmp walk to extract new information. 
 
