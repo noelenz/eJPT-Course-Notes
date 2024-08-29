@@ -75,6 +75,11 @@ Metholody with the aim of addressing the need for a comprehensive and up-to-date
 
 ![grafik](https://github.com/user-attachments/assets/2f8e02b3-1bb7-4765-bbea-505e20818445)
 
+# Installing & Configuring The Metasploit Framework
+
+- The MSF is distributed by Rapid7 and can be downloaded and installed as a standalone package on both on Windows & Linux.
+- MSF and its required dependencies come pre-packaged with Kali Linux w
+
 
 
 
