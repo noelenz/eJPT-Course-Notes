@@ -151,6 +151,19 @@ msf6 xoda exploit:`show options`
 
 msf6 xoda exploit:`run`
 
+Using the UDP module:
+
+msf6:`search udp_sweep`
+
+msf6:`use auxiliary/scanner/discovery/udp_sweep`
+
+msf6:`show options`
+
+msf6:`ifconfig`
+
+msf6:`set rhosts [targetIP]`
+
+
 
 
 
