@@ -56,5 +56,73 @@ We initiate a nmap scan from within the msfconsole:
 
 `vulns`
 
+# Enumeration
+
+## Port Scanning with Auxiliary Modules
+
+- Auxiliary modules are used to perform functionality like scanning, discovery and fuzzing.
+- We can use auxiliary modules to perform both TCP & UDP port scanning as well as enumerating information form services like FTP, SSH, HTTP etc
+- Auxiliary modules can be used during the information gathering phase of a pentest as well as the post exploitation phase.
+- We can also use auxiliary modules to discover hosts and perform port scanning on a different network subnet after we have obtained initial access on a target system.
+
+## Lab Infrastructure
+
+- Our objective is to utilize auxiliary modules to discover open ports on our first target.
+- The next step will involve exploiting the service running on the target in order to obtain a foothold.
+- We will then utilize our foothold to access other systems on a different network subnet (pivoting).
+- We will then utilize auxiliary modules to scan for open ports on the second target.
+![grafik](https://github.com/user-attachments/assets/9ab0ccac-9823-40da-8442-11f81a0e82b1)
+
+## Demo: Port Scanning with Auxiliary Modules
+
+Obtaining the target IP adress.
+
+`ifconfig`
+
+eth1, replacing 2 with 3
+
+`service postgresql start`
+
+`msfconsole`
+
+msf6:`db_status`
+
+msf6:`workspace -a Port_Scan`
+
+We want to search the portscanner auxiliary module (we start with tcp)
+
+`search portscan`
+
+msf6:`auxiliary/scanner/portscan/tcp`
+
+msf6:`ifconfig`
+
+msf6:`show options`
+
+msf6:`set rhosts [target IP]`
+
+msf6:`run`
+
+We download the Homepage (HTML Code):
+
+msf6:`curl [target IP]`
+
+msf6:`search xoda`
+
+msf6:`use exploit/unix/webapp/xoda_file_upload`
+
+`show options`
+
+msf6:`set rhosts [target IP]`
+
+We need to specify the path of the webApp:
+
+msf6:`set targeturi /`
+
+
+
+
+
+
 
 
