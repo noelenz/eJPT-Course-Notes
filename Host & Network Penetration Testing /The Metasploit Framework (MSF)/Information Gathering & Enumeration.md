@@ -212,7 +212,7 @@ msf6:`run`
 
 We get the service version and the banner.
 
-we can search for example for proftpd.
+we could search for example for an proftpd exploit.
 
 ### FTP Brute Force auxiliary module
 
