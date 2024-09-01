@@ -350,6 +350,147 @@ smb:`exit`
 
 smb:`cat flag.txt`
 
+## Web Server Enumeration
+
+- Web servers utilize HTTP to facilitate the communication between clients and the web server.
+- HTTP in an application layer protocol that utilizes TCP port 80 for communication.
+- When a webserver uses a SSL certificate, its HTTPS (port 443)
+- We can utilize auxiliary modules to enumerate the web server version, HTTP headers, brute-force directories and more.
+- Examples of popular web servers are: Apache, NGINX and MS IIS
+
+## Notes Web Server Enumeration Videocourse
+
+`ifconfig`
+
+`service postgresql start`
+
+`msfconsole`
+
+msf6:`workspace -a Web_Enum`
+
+msf6:`setg rhosts [targetIP]`
+
+msf6:`setg rhost [targetIP]`
+
+msf6:`search http`
+
+msf6:`search type:auxiliary name:http`
+
+msf6:`use auxiliary/Scanner/http/http_version`
+
+msf6:`show options`: If we would deal with a website with SSL cert, we would have to change the port and the SSL variable to true.
+
+msf6:`run`
+
+msf6:`seatch http_header`
+
+msf6:`use auxiliary/scanner/http/http_header`
+
+msf6:`show options`
+
+msf6:`run`
+
+We enumerated info about the webserver, just like with the previus module.
+
+We enumerate now information about hidden directories, which we probably don't have access to:
+
+msf6:`search robots.txt`
+
+msf6:`use 0`
+
+msf6:`show options`
+
+msf6:`run`
+
+msf6:`curl http://[targetIP]/data/`
+
+msf6:`curl http://[targetIP]/secure/`
+
+Becuase the secure directory is password-protected, we need to obtain credentials through a brute-force. But first, we perform directory search with directory brute-forcing:
+
+msf6:`search dir_scanner`
+
+msf6:`use 1`
+
+msf6:`show options`
+
+If we wanted, for example, do a brute-force on the secure folder, we could specify that with the "PATH" variable.
+
+msf6:`run`
+
+msf6:`search files_Dir`
+
+msf6:`use 1`
+
+msf6:`show options`
+
+msf6:`run`
+
+msf6:`search hhtp_login`
+
+msf6:`use auxiliary/scanner/http/http_login`
+
+msf6:`show options`
+
+msf6:`set AUTH_URI /secure/`
+
+msf6:`unset USERPASS_FILE`: Because we have a userfile and passfile specified
+
+msf6:`run`
+
+Failed brute-force. We change the user and pass files to a "stronger" file:
+
+msf6:`set user_file /usr/share/metasploit-framework/data/wordlists/namelist.txt`
+
+msf6:`set pass_file /usr/share/metasploit-framework/daata/wordlists/unix_passwords.txt`
+
+msf6:`set verbose false`
+
+msf6:`run`
+
+Still no credentials.
+
+msf6:`search apache_userdir_enum`
+
+msf6:`use auxiliary/scanner/http/apache_userdir_enum`
+
+msf6:`show options`
+
+msf6:`set USER_FILE /usr/share/metasploit-framework/data/wordlists/common_users.txt`
+
+msf6:`run`
+
+msf6:`search http_login`
+
+msf6:`use auxiliary/scanner/http/http_login`
+
+msf6:`echo "rooty" > user.txt`
+
+msf6:`set user_file /root/user.txt `
+
+msf6:`run`
+
+We ran followed auxiliary modules;
+
+
+    auxiliary/scanner/http/apache_userdir_enum
+    auxiliary/scanner/http/brute_dirs
+    auxiliary/scanner/http/dir_scanner
+    auxiliary/scanner/http/dir_listing
+    auxiliary/scanner/http/http_put
+    auxiliary/scanner/http/files_dir
+    auxiliary/scanner/http/http_login
+    auxiliary/scanner/http/http_header
+    auxiliary/scanner/http/http_version
+    auxiliary/scanner/http/robots_txt
+
+## Demo: Web Server Enumeration
+
+
+
+
+
+
 
 
 
