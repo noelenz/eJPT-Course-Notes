@@ -153,6 +153,8 @@ msf6 xoda exploit:`show options`
 
 msf6 xoda exploit:`run`
 
+Now we could start exploiting and pivoting the second target.
+
 Using the UDP module:
 
 msf6:`search udp_sweep`
@@ -164,6 +166,8 @@ msf6:`show options`
 msf6:`ifconfig`
 
 msf6:`set rhosts [targetIP]`
+
+
 
 
 
