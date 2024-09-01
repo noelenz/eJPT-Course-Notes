@@ -228,7 +228,7 @@ The options show us, that we need to provide RHOST, USER_FILE/USERNAME, PASS_FIL
 
 msf6:`set USER_FILE /usr/share/metasploit-framework/data/wordlists/common_users.txt`
 
-msf6:`set PASSWORD_FILE /usr/share/metasploit-framework/data/wordlists/common_passwords.txt`
+msf6:`set PASSWORD_FILE /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt`
 
 Start Brute-Force:
 
