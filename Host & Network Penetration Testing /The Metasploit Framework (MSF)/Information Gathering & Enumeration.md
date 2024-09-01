@@ -358,7 +358,7 @@ smb:`cat flag.txt`
 - We can utilize auxiliary modules to enumerate the web server version, HTTP headers, brute-force directories and more.
 - Examples of popular web servers are: Apache, NGINX and MS IIS
 
-## Notes Web Server Enumeration Videocourse
+## ## Demo: Web Server Enumeration
 
 `ifconfig`
 
