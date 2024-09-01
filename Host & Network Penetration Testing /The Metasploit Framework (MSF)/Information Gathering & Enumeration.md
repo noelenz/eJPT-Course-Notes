@@ -133,7 +133,7 @@ meterpreter:`shell`
 
 shell:`ifconfig`
 
-eth1 is in the target 2 subnet (change 2 to 3)
+eth1 is in the target 2 subnet (our system (target1) is eth1, for target2 change 2 to 3)
 
 clear out
 
