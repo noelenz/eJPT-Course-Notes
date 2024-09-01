@@ -268,6 +268,8 @@ msf6:`exit`
 
 `cat secret.txt`
 
+We obtained the flag.
+
 
 
 
