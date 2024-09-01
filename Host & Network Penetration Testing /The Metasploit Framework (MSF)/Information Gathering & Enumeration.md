@@ -167,6 +167,109 @@ msf6:`ifconfig`
 
 msf6:`set rhosts [targetIP]`
 
+## FTP Enumeration
+
+- FTP is a protocol that uses TCP port 21 and is used to facilitate file sharing between a server and client / clients.
+- It is also used as a means of trandferring files to and from the directory of a web server.
+- We can use multiple auxiliary modules to enumerate information as well as perform brute-force attacks on targets running an FTP server.
+- FTP authenticaton utilizes a username and password combination, however, in some cases an improperly configured FTP server can be logged into anonymously.
+
+## Demo: FTP Enumeration
+
+`service postgresql start`
+
+`ifconfig`
+
+`msfconsole`
+
+msf6:`workspace -a FTP_Enum`
+
+We use a auxiliary module to check the version of FTP. First we check the open ports using a portscan module:
+
+msf6:`use auxiliary/scanner/portscan/tcp`
+
+msf6:`show options`
+
+msf6:`set rhosts [targetIP]`
+
+msf6:`run`
+
+We can't see the service version, so how mentioned earlier:
+
+`back`
+
+msf6:`search ftp`
+
+msf6:`search type:auxiliary name:ftp`
+
+msf6:`use auxiliary/scanner/ftp/ftp_version`
+
+msf6:`show options`
+
+msf6:`set rhosts [targetIP]`
+
+msf6:`run`
+
+We get the service version and the banner.
+
+we can search for example for proftpd.
+
+### FTP Brute Force auxiliary module
+
+msf6:`search type:auxiliary name:ftp`
+
+msf6:`use auxiliary/scanner/ftp/ftp_login`
+
+msf6:`set rhosts [target IP]`
+
+msf6:`show options`
+
+The options show us, that we need to provide RHOST, USER_FILE/USERNAME, PASS_FILE. Because we don't have a password nor a username, we provide a user_file and a password_file. We use metasploit files
+
+msf6:`set USER_FILE /usr/share/metasploit-framework/data/wordlists/common_users.txt`
+
+msf6:`set PASSWORD_FILE /usr/share/metasploit-framework/data/wordlists/common_passwords.txt`
+
+Start Brute-Force:
+
+msf6:`run`
+
+msf6:`ftp [targetIP]`
+
+The brute-force causes a ddos. so we try another module while we wait for the restart:
+
+we try to login anonymously:
+
+msf6:`search type:auxiliary name: auxiliary`
+
+msf6:`use auxiliary/scanner/ftp/anonymous`
+
+msf6:`show options`
+
+msf6:`set rhosts [target IP]`
+
+msf6:`run`
+
+We can see, that anonymous login is not possible in our case. So we try to login with our obtained credentials. But first we exit metasploit:
+
+msf6:`exit`
+
+`ftp [targetIP]`
+
+*We login with our credentials*
+
+`ls`
+
+`get secret.txt`
+
+`exit`
+
+`ls`
+
+`cat secret.txt`
+
+
+
 
 
 
