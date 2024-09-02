@@ -670,7 +670,7 @@ msf6:`set user_file /usr/share/metasploit-framework/data/wordlists/common_users.
 
 ## Demo: SMTP Enumeration
 
-`ifonfig`
+`ifconfig`
 
 `nmap -Pn [targetIP]`: We want to detect on which port smtp is running on
 
