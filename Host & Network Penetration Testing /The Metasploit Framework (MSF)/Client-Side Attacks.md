@@ -127,3 +127,11 @@
         ```
 
     - **Result**: We obtained a Meterpreter session.
+ 
+## Encoding Payloads with Msfvenom
+
+- Given that this attack vector involves the transfer and storage of a malicious payload on the client's system (disk), attackers need to be cognisant of AV detection.
+- Most end user AV solutions utilize signature based detection in order to identify malicious files or executables.
+- We can evade older signature based AV soulutions by encoding our payloads.
+- Encoding is the process of modifying the payload shellcode with the objective of medifying the payload signature.
+
