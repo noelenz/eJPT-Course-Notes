@@ -32,3 +32,10 @@
 6. **Continous Improvement:**
 - Security auditing is not a one-time activity but an ongoing process that promotes continous improvement.
 - Regular audits ensure that security measures evolve o address new threas and vulnerabilities, maintaining a proactive approach to security.
+
+## Essential Terminology
+
+![grafik](https://github.com/user-attachments/assets/7c738c49-2ddf-4265-9031-2eefec91656e)
+
+![grafik](https://github.com/user-attachments/assets/a349322b-7078-47c9-8d2d-1a51aa5b4eba)
+
