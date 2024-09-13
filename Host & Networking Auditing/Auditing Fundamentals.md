@@ -39,3 +39,46 @@
 
 ![grafik](https://github.com/user-attachments/assets/a349322b-7078-47c9-8d2d-1a51aa5b4eba)
 
+## Security Auditing Process/Lifecycle
+
+1. **Planning and Preparation**
+- Define Objectives and Scope: Determine the goals of the audit and the specific systems, processes, and controls to be evaluated.
+- Gather Relevant Documentation: Collect policies, procedures, network diagrams, and previous audit reports.
+- Establish Audit Team and Schedule: Assemble the audit team and set a timeline for the audit activities.
+
+2. **Information Gathering**
+- Review Policies and Procedures: Examine the organization's security policies, procedures, and standards.
+- Conduct Interview key personnel to understand security practices and identify potential gaps.
+- Collect Technical Information: Gather data on system configurations, network architecture, and security controls.
+
+3. **Risk Assessment**
+- Identify Assets and and Threats: List critical assets and potential threats to those assets.
+- Evaluate Vulnerabilities: Assess existing vulnerabilities in systems and processes.
+- Determine Risk Levels: Assign risk levels based on the likelihood and impact of identified threats and vulnerabilities.
+
+4. **Audit Execution**
+- Perform Technical Testing: Conduct technical assessments such as vulnerability scans, pentests, and confiugration reviews.
+- Verify Compliance: Check adherence to relevant regulations and standards.
+- Evaluate Controls: Assess the effectiveness of security controls and practices.
+
+5. **Analysis and Evaluation**
+- Analyze Fidings: Review data collected during the audit to identify security weaknesses and areas for improvement.
+- Compare against Standards: Measure the organization's security posture against industry standards and best practices.
+- Prioritize Issues: Rank findings based on their severity and potential impact on the organization.
+
+6. **Reporting**
+- Document Findings: Create a detailed report outlining audit findings, including identified vulnerabilities, non-compliance issues, and ineffective controls.
+- Provide Recommendations: Offer actionable recommendations to address identified issues and enhance security.
+- Present Results: Share the audit report with relevant stakeholders and discuss key findings and recommendations.
+
+7. **Remediation**
+- Develop Remediation Plans: Work with the organization to create plans for addressing the audit findings.
+- Implement Changes: Assist in implementing recommended changes and improvements.
+- Conduct Follow-Up Audits: Schedule follow audits to ensure that remediation efforts have been completed and are effective.
+- Monitor and Update: Continously monitor the organization's security posture and update security measures as needed.
+
+### Security Auditing Lifecycle
+
+![grafik](https://github.com/user-attachments/assets/860cd649-6af5-44ca-8da3-a1935a56c51c)
+
+
