@@ -199,4 +199,43 @@ During the initial phase, you identify that the PCI DSS scope includes the cardh
 - Enhanced Reporting: Knowledge of GRC allows testers to frame their findings in the context of organizational policies, risk management, and compliance requirements.
 - Strategic Recommendations: Testers can provide more strategic recommendations that align with the organization's GRC framework, helping to strengthen overall security posture.
 
+## Common Standards, Frameworks & Guidelines
+
+- Frameworks: Provide a structured approach to implementing security practices, often flexible and adaptable to various organizations and industries.
+- Standards: Set specific requirements and criteria that must be met to achieve compliance; often mandatory in regulated industries.
+- Guidelines: offer recommended practices and advice to improve security; generally not mandatory but considered best practices.
+
+### Frameworks
+
+**NIST Cybersecurity Framework (CSF)**
+- Overview: A set of guidelines and best practices developed by the National Institute of Standards and Technology (NIST) to help organizations manage and reduce cybersecurity risk.
+- Key Focus: Core functions include Identify, Protect, Detect, Respond and Recover.
+
+**COBIT (Control Objectives for Information and Related Technologies)**
+- Overview: A framework for developing, implementing, monitoring and improving IT governance and management practices.
+- Key Focus: Aligning IT goals with business objectives, managing IT risks, and ensuring compliance with regulations.
+
+### Standards
+
+**ISO/IEC 27001**
+- Overview: An international standard for information security management systems (ISMS) that outlines best practices for managing and protecting sensitive information.
+- Key Focus: Establishing, implementing, maintaining and continually improving an ISMS.
+
+**PCI Data Security Stanard (PCI DSS)**
+- Overview: A set of security standards designed to protect payment card information and ensure secure processing of credit card transactions.
+- Key Focus: Requirements for protecting cardholder data, maintaining a secure network, and implementing robust access control measures.
+- Legal Requirement: Required for organizations that handle credit card transactions.
+
+**GDPR (General Data Protection Regulation)**
+- Overview: A regulation in the European Union that governs data protection and privacy for individuals within the EU and the European Economic Area (EAA).
+- Key Focus: Data protection principles, right of data subjects, and obligations for data controllers and processors.
+- Legal Requirement: Required for organizations processing personal data of individuals within the EU/EEA.
+
+### Guidelines
+
+**CIS Controls (Center for Internet Security Controls**
+- Overview: A set of best practices and actionable steps to help organizations improve their cybersecurity posture.
+- Key Focus: Foundational and advanced security controls organized into categories such as basic, foundational, and organizational controls.
+
+
 
