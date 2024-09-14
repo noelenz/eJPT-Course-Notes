@@ -237,5 +237,33 @@ During the initial phase, you identify that the PCI DSS scope includes the cardh
 - Overview: A set of best practices and actionable steps to help organizations improve their cybersecurity posture.
 - Key Focus: Foundational and advanced security controls organized into categories such as basic, foundational, and organizational controls.
 
+# From Auditing to Penetration Testing
 
+## Phase 1 - Developing a Security Policy
 
+**Background:**
+- Company: SecureTech Solutions
+
+**Description:**
+- SecureTech Solutions is a fictitious cybersecurity consultancy that specializes in securing IT infrastructure for various clients.
+- In this example, we will be demonstrating the process of developing a security policy for Linux servers, performing a risk assessment using the NIST SP 800-53 framework, perfoming a security audit and testing the remediations.
+- The example will guide you thorugh the entire process, from initial policy creation to auditing and penetration testing, highlighting the importance of compliance with industry standards.
+
+**Objectives:**
+- Establish a baseline security policy for Linux servers that aligns with NIST SP 800-53 guidelines, ensuring that servers are configured and managed securely.
+- This policy should ensure that Linux servers are secure and protected from unauthorized access, vulnerabilities, and other security threats.
+- It will be used to establish baseline security requirements for configuring, maintaining, and monitoring Linux servers within the organization, aligned with NIST SP 800-53.
+
+**Security Policy Development Process: Requirements Gathering**
+- Purpose: Define the purpose and scope of the security policy.
+- Access Control: Outline user account management, authentication methods, and privilege management.
+- Audit and Accountability: Specify logging requirements and log review procedures. Configuration Management: Define baseline configurations, software update practices, and change management.
+- Identification and Authentication: Enforce strong passwords, policies and unique user identification.
+
+**Simple Security Policy for Linux Servers Aligned with NIST SP 800-53**
+
+![grafik](https://github.com/user-attachments/assets/c27df8de-c401-489c-bcf8-e059a2d8a046)
+
+![grafik](https://github.com/user-attachments/assets/903431a6-f05b-4679-8557-1751b08f11dd)
+
+![grafik](https://github.com/user-attachments/assets/febb5eff-66ca-492f-8afc-29b75ef82c6a)
