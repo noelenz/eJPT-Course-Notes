@@ -81,4 +81,8 @@
 
 ![grafik](https://github.com/user-attachments/assets/860cd649-6af5-44ca-8da3-a1935a56c51c)
 
+## Types of Security Audits
 
+![grafik](https://github.com/user-attachments/assets/8c4ebc56-d391-4edd-9c14-04eca8116c19)
+
+![grafik](https://github.com/user-attachments/assets/424dfbe2-79ce-4a80-8fe5-42bd2e6f43a8)
