@@ -165,3 +165,6 @@ During the initial phase, you identify that the PCI DSS scope includes the cardh
   - Revealed specific technical vulnerabilities.
   - Offered targeted recommendations to address these technical weaknesses.
 
+
+# Governance, Risk & Compliance
+
