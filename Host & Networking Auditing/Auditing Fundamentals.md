@@ -86,3 +86,82 @@
 ![grafik](https://github.com/user-attachments/assets/8c4ebc56-d391-4edd-9c14-04eca8116c19)
 
 ![grafik](https://github.com/user-attachments/assets/424dfbe2-79ce-4a80-8fe5-42bd2e6f43a8)
+
+## Security Auditing & Penetration Testing
+
+![grafik](https://github.com/user-attachments/assets/c35078f9-b9d4-4dcf-a9ea-3a9a9377382c)
+
+### Sequental Approach
+
+**Perform Security Audit First:** Companies often coduct a security audit first to elevate their overall security posture, ensure compliance with regulations, and identify areas for improvement in policies and procedures.
+
+**Conduct Penetration Test Afterwards:** Based on the findings of the audit, a penetration test may be performed to assess the effectiveness of technical controls and identify specific vulnerabilities.
+
+**Advantages**
+- Provides a comprehensive view of security from both policy and technical perspectives.
+- Identifies and addresses gaps in both procedural and technical controls.
+- Helps prioritize remediation efforts based on audit findings.
+
+### Combined Appraoch
+
+**Integrate Security Audit and Penetration Testing:** Some organizations choose to combine security audits and penetration tests, often through a holistic security assessment that incorporates both elements.
+
+**Advantages**
+- Streamlines the assessment process by combining policy, procedural, and technical evaluations.
+- Provides a more complete picture of the organization's security posture in a single engagement.
+- Can be more efficient and cost-effective by addressing both compliance and technical vulnerabilities simultaneously.
+
+### Example: Sequential Approach
+
+- Consider a fictional organization, "SecurePayments Inc.", which processes credit card transactions and must adhere to PCI DSS standards.
+- In this example, "SecurePayments Inc." is using a sequential approach to assess their overall security posture. The organization has already performed a security audit through an independent audit firm and are using the findings in the audit report as the basis of their remediation plan/efforts.
+- As part of their remediation plan, the organization has decided to hire you (or your firm) to perform a penetration test with a focus on ensuring PCI DSS compliance.
+- The extenral audit performed by the independent audit firm outloined the following findings:
+  - Inadequate encryption for cardholder data in transit.
+  - Weak/inadequate network security controls and traffic monitoring.
+  - Weak access control policies that allows excessive permissions,
+  - Outdated incident response procedures.
+- The corresponding recommendations for the findings outlined are:
+  - Implement strong encryption protocols for data in transit.
+  - Revise access control policies to follow the principle of least privilege.
+  - Update and test incident response procedures regularly.
+ 
+The company followed the Security Audit lifecycle/process outlined in the "Security Auditing Process/Lifecycle video and made the necessary improvements based on the recommendations.
+
+**SecurePayments Inc. - Penetration Test**
+
+**Objectives:**
+- After making the necessary changes/improvements based on the findings and recommendations in the external audit report, "SecurePayments Inc.," has hired you to test the technical controls and security measures implemented based on audit findings to verify whether they are effective.
+
+**Phase 1: Planning and Preparation:**
+During the initial phase, you identify that the PCI DSS scope includes the cardholder data environment (CDE). You review SecurePayments Inc.'s network diagrams and PCI DSS self-assessment questionaires to understand their current security measures and compliance status.
+**Objectives:**
+- Define the scope of the pentest to focus on the areas identified in the audit, such as network security and application vulnerabilities.
+- Set up a testing schedule and inform stakeholders.
+
+**Phase 2: Information Gathering and Reconnaissance:**
+- You gather information on SecurePayments Inc.'s security policies, such as their access control policies, encryption standards, and incident response procedures.
+- You also review their most recent PCI DSS audit report to identify areas of concern highlighted by auditors.
+
+**Phase 3: Penetration Testing Execution:**
+- Conduct network scanning, enumeration and vulnerability assessments to identify weaknesses, misconfigurations or vulnerabilities.
+- Attempt exploitation of identified vulnerabilities to asses their impact.
+- Test the effectiveness of newly implemented encryption and access controls.
+
+**Phase 4: Findings and Recommendations:**
+- Outcome: The pentest uncovers additional vulnerabilities:
+  - An exposed administrative interface that allows unauthorized access.
+  - SQL injection vulnerabilities in a customer-facing web application.
+ 
+- Recommendations:
+  - Secure the administrative interface by implementing additional authentication and access controls.
+  - Patch the SQL injection vulnerabilities and conduct a thorough review of application security.
+ 
+**Summary of Sequential Approach**
+- Security Audit Results:
+  - Identified compliance gaps and policy deficiencies.
+  - Provided recommendations for improved security policies and procedures.
+- Penetration Testing Results:
+  - Revealed specific technical vulnerabilities.
+  - Offered targeted recommendations to address these technical weaknesses.
+
