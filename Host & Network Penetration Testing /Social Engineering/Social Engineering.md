@@ -113,9 +113,73 @@
 - A library of pretexts to use on offensive phishing engagements
 https://github.com/L4bF0x/PhishingPretexts/tree/master
 
+## Phishing With Gophish
 
+### Gophish
 
+- Gophish is a framework for security professionals to simulate phishing attacks against their own organizations.
 
+### Gophish Features
+
+**Camapign Creation:** GoPhish allows users to create customized phishing campaigns tailored to their specific objectives and targets. Users can create multiple campaigns with different templates, email content, and target lists.
+
+**Email Template Editor:** The platform provides a built-in email tempate editor with a WYSIWYG (What you see is what you get) interface, making it easy to design professional-looking phishing emails that mimic legitimate communications.
+
+**Target Management:** Users can manage their target lists and segment them based on various criteria, such as department, role, or location. This allwos for targeted phishing campaigns that closely mirror real-world attack scenarious.
+
+**Landing Page Creation:** GoPhish enables users to create phishing landing pages that mimic legitimate login portals or websites. These landing pages can be customized to capture credentials, personal information, or other sensitive data from targets.
+
+**Tracking and Reporting:** The platform provides comprehensive tracking and reporting capabilities, allowing users to monitor the progress of their phishing campaigns in real-time. Users can track email opens, link clicks, and submitted data, and generate detailed reports for analysis.
+
+**Scheduling and Automation:** GoPhish supports campaign scheduling and automation, allowing users to schedule campaign launches at specific dates and times or set up recurring campaigns for ongoing testing and assessment.
+
+### References & Resources
+
+- Gophish Website: https://getgophish.com/
+- Gophish GitHub Repo: https://github.com/gophish/gophish
+- Gophish Installation Guide: https://docs.getgophish.com/user-guide/installation
+
+## Demo: Phishing with GoPhish
+
+We open base.html with notepad and delete the additional fonts, because it makes the Gophish web slower. We not delete locally stored fonts.
+We do the same for the login page and dashboard (if existent)
+In config.json we could specify a SSL certificate.
+In a real pentest, we would need to specify our Gophish server in the config.json file.
+We set use_tls to false in the config.json file.
+We delete the external resources in C:\inetpub\wwwroot\index.html
+
+We open the Gophish executable. Starts up the server.
+
+### GoPhish Dashboard
+
+1. Setup the Sending Profile, for sending emails (who email is from). In our case:
+   1. **Name:** Red Team
+   2. **From:** info <support@demo.ine.local>
+   3. **Host:** localhost:25 (netstat -ano, port 25 (mailserver) listening)
+   4. **Username:** red@demo.ine.local
+   5. **Password:** penetrationtesting
+
+   We test the email. victim@demo.ine.local (Vic, Tim, Intern).
+
+2. We set up a landing page which mimics a login page.
+   2.1 **Name:** INE Password Reset
+   2.2 **URL:** http://localhost:8080
+   2.3 We select Capturing Submitted Data and we could also Capture Passwords (Checkmarking the window for Capturing Data.)
+   2.4 Redirect
+
+3. Creating E-Mail Template
+   3.1 **Name:** INE Password Reset
+   3.2 **Import Email:** We import the raw email content. Here we can also insert our pretext
+   3.4 We could also add files.
+
+4. New Group
+   4.1 **Name: INE Employees:** Bulk Import Users (CSV)
+
+5. Campaign
+   5.1 Specify all the parameters
+   5.2 **URL:** localhost port 80: http://localhost
+   5.3 Setting the Date/Time when the campaign should be sent out
+   5.4
 
 
 
