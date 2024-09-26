@@ -141,12 +141,12 @@ https://github.com/L4bF0x/PhishingPretexts/tree/master
 
 ## Demo: Phishing with GoPhish
 
-We open base.html with notepad and delete the additional fonts, because it makes the Gophish web slower. We not delete locally stored fonts.
-We do the same for the login page and dashboard (if existent)
-In config.json we could specify a SSL certificate.
-In a real pentest, we would need to specify our Gophish server in the config.json file.
-We set use_tls to false in the config.json file.
-We delete the external resources in C:\inetpub\wwwroot\index.html
+- We open base.html with notepad and delete the additional fonts, because it makes the Gophish web slower. We not delete locally stored fonts.
+- We do the same for the login page and dashboard (if existent)
+- In config.json we could specify a SSL certificate.
+- In a real pentest, we would need to specify our Gophish server in the config.json file.
+- We set use_tls to false in the config.json file.
+- We delete the external resources in C:\inetpub\wwwroot\index.html
 
 We open the Gophish executable. Starts up the server.
 
