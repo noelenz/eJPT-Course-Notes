@@ -480,5 +480,36 @@
 ![grafik](https://github.com/user-attachments/assets/ebc62359-ecc9-49cd-9d83-48ac762df97c)
 
 
+#### HTTP Response Content-Type Header
+
+- The "Content-Type" header in an HTTP response is used to indicate the media type of the response content.
+- It tells the client what type of data the server is sending so that the client can handle it appropriately.
+
+
+![grafik](https://github.com/user-attachments/assets/abc196bd-83fa-4b38-be0c-688a2b817252)
+
+
+#### HTTP Response Content-Encoding Header
+
+- The "Content-Encoding" header in an HTTP response is used to specify the compression encoding applied to the response content.
+- It tells the client how the server has encoded the response data, allowing the client to decode and decompress the data correctly.
+
+
+![grafik](https://github.com/user-attachments/assets/312669d2-9392-4a0e-ae1f-15320ee86c79)
+
+
+
+#### HTTP Response Server Header
+
+- The Server header displays the Web Serber banner, for example, Apache, Nginx, IIS etc.
+- Google uses a custom web server banner: gws (Google Web Server).
+
+
+![grafik](https://github.com/user-attachments/assets/f7b740da-73cf-46d1-8516-3abf7d3aa0bd)
+
+
+####
+
+
 
 
